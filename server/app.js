@@ -3,6 +3,7 @@ import cors from 'cors';
 import 'dotenv/config.js';
 import express from 'express';
 import mongoose from 'mongoose';
+import usersRoutes from './components/users/users.js';
 
 const app = express();
 
@@ -20,6 +21,8 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.send('DOCAPP API');
 });
+
+app.use('/api/v1/users', usersRoutes);
 
 const CONNECTION_URL = process.env.DB_URL;
 const PORT = process.env.PORT || 5000;
