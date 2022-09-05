@@ -2,14 +2,14 @@
 	"name": "docapp",
 	"version": "1.0.0",
 	"description": "Doctors appionment app",
-	"main": "app.js",
+	"main": "index.js",
 	"repository": "https://github.com/b-l-i-n-d/docapp",
 	"type": "module",
 	"engines": {
 		"node": "17.4.0"
 	},
 	"scripts": {
-		"start": "nodemon app.js",
+		"start": "nodemon index.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "b-l-i-n-d",

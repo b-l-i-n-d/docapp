@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { jwtconfig } from '../../configs/index.js';
 import User from './usersModel.js';
 
 export const login = async (req, res) => {
@@ -20,8 +21,8 @@ export const login = async (req, res) => {
 
         const token = jwt.sign(
             { email: existingUser.email, id: existingUser._id },
-            process.env.JWT_SECRET,
-            { expiresIn: '24h' }
+            jwtconfig.ACCESS_SECRET,
+            { expiresIn: jwtconfig.ACCESS_EXP }
         );
 
         return res.status(200).json({ result: existingUser, token });
@@ -49,8 +50,8 @@ export const signup = async (req, res) => {
             password: hashPassword,
         });
 
-        const token = jwt.sign({ email: result.email, id: result._id }, process.env.JWT_SECRET, {
-            expiresIn: '24h',
+        const token = jwt.sign({ email: result.email, id: result._id }, jwtconfig.ACCESS_SECRET, {
+            expiresIn: jwtconfig.ACCESS_EXP,
         });
 
         return res.status(200).json({ result, token });
