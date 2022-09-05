@@ -11,10 +11,12 @@
 		"lint": "yarn add -D prettier && yarn add -D @babel/core @babel/preset-react @babel/eslint-parser && npx install-peerdeps --dev eslint-config-airbnb && yarn add -D eslint-config-prettier eslint-plugin-prettier"
 	},
 	"dependencies": {
+		"@reduxjs/toolkit": "^1.8.5",
 		"antd": "^4.22.7",
 		"daisyui": "^2.24.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-redux": "^8.0.2",
 		"react-router-dom": "6",
 		"theme-change": "^2.2.0"
 	},

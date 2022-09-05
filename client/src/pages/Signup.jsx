@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { themeChange } from 'theme-change';
 import LogoImg from '../assets/login/1.png';
+import { useSignupUserMutation } from '../redux/api/authAPI';
 
 function Signup() {
     useEffect(() => {
@@ -11,9 +12,19 @@ function Signup() {
     }, []);
 
     const theme = localStorage.getItem('theme');
+    const [signupUser, { isError, isLoading, isSuccess, data, error }] = useSignupUserMutation();
+
+    useEffect(() => {
+        if (isSuccess) {
+            console.log(data);
+        }
+        if (isError) {
+            console.log(error);
+        }
+    }, [data, error, isError, isLoading, isSuccess]);
 
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
+        signupUser(values);
     };
 
     return (
