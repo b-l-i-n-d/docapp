@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, notification } from 'antd';
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { themeChange } from 'theme-change';
 import LogoImg from '../assets/login/1.png';
 import { useSignupUserMutation } from '../redux/api/authAPI';
@@ -13,15 +13,21 @@ function Signup() {
 
     const theme = localStorage.getItem('theme');
     const [signupUser, { isError, isLoading, isSuccess, data, error }] = useSignupUserMutation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isSuccess) {
-            console.log(data);
+            navigate('/', { replace: true });
         }
         if (isError) {
-            console.log(error);
+            notification.open({
+                type: 'error',
+                message: error.data.error,
+                description: error.data.description,
+                placement: 'bottomRight',
+            });
         }
-    }, [data, error, isError, isLoading, isSuccess]);
+    }, [data, error, isError, isLoading, isSuccess, navigate]);
 
     const onFinish = (values) => {
         signupUser(values);

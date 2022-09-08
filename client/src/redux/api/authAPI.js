@@ -11,7 +11,7 @@ export const authAPI = createApi({
                 return {
                     url: 'login',
                     method: 'POST',
-                    // credentials: 'include',
+                    credentials: 'include',
                     body: data,
                 };
             },
@@ -29,7 +29,7 @@ export const authAPI = createApi({
                 return {
                     url: 'signup',
                     method: 'POST',
-                    // credentials: 'include',
+                    credentials: 'include',
                     body: data,
                 };
             },

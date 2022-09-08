@@ -1,6 +1,6 @@
 import { body, validationResult } from 'express-validator';
 
-export const userValidationRules = () => [
+const userValidationRules = () => [
     body('name').isLength({ min: 2 }).withMessage('Name must be at least 2 chars long.'),
     body('email').isEmail().withMessage('Use a valid email'),
     body('password')
@@ -12,7 +12,7 @@ export const userValidationRules = () => [
         ),
 ];
 
-export const validate = (req, res, next) => {
+const validate = (req, res, next) => {
     const errors = validationResult(req);
 
     if (errors.isEmpty()) {
@@ -29,3 +29,5 @@ export const validate = (req, res, next) => {
         message: extractedErrors,
     });
 };
+
+export default { userValidationRules, validate };
