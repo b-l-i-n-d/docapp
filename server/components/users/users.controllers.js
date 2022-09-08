@@ -1,6 +1,6 @@
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { cookiesConfig, jwtConfig } from '../../configs/index.js';
+import { helpers } from '../../utils/index.js';
 import User from './users.model.js';
 
 const login = async (req, res) => {
@@ -35,11 +35,10 @@ const login = async (req, res) => {
 
 const signup = async (req, res) => {
     const { name, email, password } = req.body;
-    const genSalt = await bcrypt.genSalt(12);
-    const hashPassword = await bcrypt.hash(password, genSalt);
+    const hashPassword = await helpers.genBcrypt(password);
+    console.log(hashPassword);
 
     try {
-        console.log(hashPassword);
         const result = await User.create({
             name,
             email,
