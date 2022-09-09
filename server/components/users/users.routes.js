@@ -10,5 +10,10 @@ router.post(
     [validator.userValidationRules(), validator.validate, auth.isEmailExists],
     usersController.signup
 );
+router.get(
+    '/verifyToken',
+    [auth.verifyRefreshToken, auth.verifyAccessToken],
+    usersController.verifyToken
+);
 
 export default router;

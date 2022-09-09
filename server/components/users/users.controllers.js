@@ -72,4 +72,10 @@ const signup = async (req, res) => {
     }
 };
 
-export default { login, signup };
+const verifyToken = async (req, res) => {
+    const response = helpers.tokenResponse(res.locals.accessToken);
+
+    return res.status(200).json({ ...response });
+};
+
+export default { login, signup, verifyToken };

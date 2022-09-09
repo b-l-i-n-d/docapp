@@ -22,9 +22,7 @@ const verifyAccessToken = async (req, res, next) => {
         });
 
         res.locals.accessToken = {
-            statusCode: 201,
             isAuth: true,
-            from: './users/usersMiddlewear verifyAccessToken 2',
             message: 'created new accessToken',
             data: {
                 accessToken: cookiesConfig.access.name,
@@ -34,9 +32,7 @@ const verifyAccessToken = async (req, res, next) => {
         res.clearCookie(cookiesConfig.access.name);
 
         return res.status(406).json({
-            statusCode: 406,
             isAuth: false,
-            from: './users/usersMiddlewear verifyAccessToken 3',
             message: 'Your credentials are invalid. Please try login again.',
         });
     }

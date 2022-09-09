@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
+import { cookieExtractor } from '../../helpers/index';
 import { setUser } from '../features/users/userSlice';
 
 export const authAPI = createApi({
@@ -18,7 +19,8 @@ export const authAPI = createApi({
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    dispatch(setUser(data));
+                    const user = await cookieExtractor(data.data.accessToken);
+                    dispatch(setUser(user));
                 } catch (error) {
                     console.log(error);
                 }
@@ -36,7 +38,26 @@ export const authAPI = createApi({
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    dispatch(setUser(data));
+                    const user = await cookieExtractor(data.data.accessToken);
+                    dispatch(setUser(user));
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+        }),
+        verifyToken: builder.query({
+            query() {
+                return {
+                    url: 'verifyToken',
+                    method: 'GET',
+                    credentials: 'include',
+                };
+            },
+            async onQueryStarted(args, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    const user = await cookieExtractor(data.data.accessToken);
+                    dispatch(setUser(user));
                 } catch (error) {
                     console.log(error);
                 }
@@ -45,4 +66,5 @@ export const authAPI = createApi({
     }),
 });
 
-export const { useLoginUserMutation, useSignupUserMutation, usePrefetch } = authAPI;
+export const { useLoginUserMutation, useSignupUserMutation, useVerifyTokenQuery, usePrefetch } =
+    authAPI;
