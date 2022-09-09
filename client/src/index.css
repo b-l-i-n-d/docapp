@@ -7,3 +7,17 @@
 * {
     font-family: "Inter", sans-serif;
 }
+
+@layer components {
+    .antdInputPassword input {
+        @apply bg-inherit text-base-content;
+    }
+
+    .antNotificationMessage .ant-notification-notice-message {
+        @apply text-base-content;
+    }
+
+    .antNotificationClose .ant-notification-notice-close {
+        @apply text-base-content;
+    }
+}

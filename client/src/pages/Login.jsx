@@ -21,6 +21,8 @@ function Login() {
         }
         if (isError) {
             notification.open({
+                className:
+                    'bg-base-100 text-base-content antNotificationMessage antNotificationClose',
                 type: 'error',
                 message: error.data.error,
                 description: error.data.description,
