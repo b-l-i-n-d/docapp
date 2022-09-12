@@ -12,12 +12,15 @@
     .antdInputPassword input {
         @apply bg-inherit text-base-content;
     }
+    .antdInputPasswordIcon .ant-input-password-icon {
+        @apply text-base-content hover:text-base-content;
+    }
 
-    .antNotificationMessage .ant-notification-notice-message {
+    .antdNotificationMessage .ant-notification-notice-message {
         @apply text-base-content;
     }
 
-    .antNotificationClose .ant-notification-notice-close {
+    .antdNotificationClose .ant-notification-notice-close {
         @apply text-base-content;
     }
 }

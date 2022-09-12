@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { themeChange } from 'theme-change';
 import LogoImg from '../assets/login/1.png';
+import { LoaderOverlay } from '../components/common';
 import { useLoginUserMutation } from '../redux/api/authAPI';
 
 function Login() {
@@ -16,16 +17,14 @@ function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isSuccess) {
-            navigate('/', { replace: true });
-        }
-        if (isError) {
+        if (error) {
+            console.log(error);
             notification.open({
                 className:
-                    'bg-base-100 text-base-content antNotificationMessage antNotificationClose',
+                    'bg-base-100 rounded-2xl text-base-content antdNotificationMessage antdNotificationClose shadow-lg shadow-primary/30',
                 type: 'error',
-                message: error.data.error,
-                description: error.data.description,
+                message: error.data ? error.data.error : 'Can not connect to server.',
+                description: error.data ? error.data.description : 'Please try again.',
                 placement: 'bottomRight',
             });
         }
@@ -35,7 +34,9 @@ function Login() {
         loginUser(values);
     };
 
-    return (
+    return isLoading ? (
+        <LoaderOverlay />
+    ) : (
         <div className="hero min-h-screen bg-base-100">
             <div className="hero-content flex-col lg:flex-row-reverse w-full">
                 <div className="text-center flex flex-col items-center lg:text-left lg:ml-5 lg:w-1/2">
@@ -128,7 +129,7 @@ function Login() {
                                     ]}
                                 >
                                     <Input.Password
-                                        className="input input-bordered text-base-content antdInputPassword"
+                                        className="input input-bordered text-base-content antdInputPassword antdInputPasswordIcon"
                                         placeholder="min 6 chars long"
                                     />
                                 </Form.Item>

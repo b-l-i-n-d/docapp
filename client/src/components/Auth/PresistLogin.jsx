@@ -1,18 +1,12 @@
-import { Spin } from 'antd';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { useVerifyTokenQuery } from '../../redux/api/authAPI';
+import { LoaderOverlay } from '../common';
 
 function PresistLogin() {
     const { isLoading } = useVerifyTokenQuery();
 
-    return isLoading ? (
-        <div className="flex h-screen justify-center items-center">
-            <Spin size="large" />
-        </div>
-    ) : (
-        <Outlet />
-    );
+    return isLoading ? <LoaderOverlay /> : <Outlet />;
 }
 
 export default PresistLogin;
