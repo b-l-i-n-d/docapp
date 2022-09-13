@@ -72,10 +72,21 @@ const signup = async (req, res) => {
     }
 };
 
+const logout = async (req, res) => {
+    res.cookie(cookiesConfig.access.name, '(☞ﾟヮﾟ)☞☜(ﾟヮﾟ☜)', cookiesConfig.access.delete);
+
+    res.cookie(cookiesConfig.refresh.name, '(☞ﾟヮﾟ)☞☜(ﾟヮﾟ☜)', cookiesConfig.refresh.delete);
+
+    res.status(200).json({
+        isAuth: false,
+        message: 'You have been logged out.',
+    });
+};
+
 const verifyToken = async (req, res) => {
     const response = helpers.tokenResponse(res.locals.accessToken);
 
     return res.status(200).json({ ...response });
 };
 
-export default { login, signup, verifyToken };
+export default { login, logout, signup, verifyToken };

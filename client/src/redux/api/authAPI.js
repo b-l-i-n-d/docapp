@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
-import { cookieExtractor } from '../../helpers/index';
+import { cookieDestroyer, cookieExtractor } from '../../helpers/index';
 import { setUser } from '../features/users/userSlice';
 
 export const authAPI = createApi({
@@ -45,6 +45,26 @@ export const authAPI = createApi({
                 }
             },
         }),
+        logoutUser: builder.query({
+            query() {
+                return {
+                    url: 'logout',
+                    method: 'GET',
+                    credentials: 'include',
+                };
+            },
+            async onQueryStarted(args, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data) {
+                        await cookieDestroyer();
+                    }
+                    dispatch(setUser(null));
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+        }),
         verifyToken: builder.query({
             query() {
                 return {
@@ -66,5 +86,10 @@ export const authAPI = createApi({
     }),
 });
 
-export const { useLoginUserMutation, useSignupUserMutation, useVerifyTokenQuery, usePrefetch } =
-    authAPI;
+export const {
+    useLoginUserMutation,
+    useSignupUserMutation,
+    useLogoutUserQuery,
+    useVerifyTokenQuery,
+    usePrefetch,
+} = authAPI;

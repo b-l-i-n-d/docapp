@@ -10,6 +10,7 @@ router.post(
     [validator.userValidationRules(), validator.validate, auth.isEmailExists],
     usersController.signup
 );
+router.get('/logout', usersController.logout);
 router.get(
     '/verifyToken',
     [auth.verifyRefreshToken, auth.verifyAccessToken],
