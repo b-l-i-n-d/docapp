@@ -4,6 +4,7 @@ import cors from 'cors';
 import 'dotenv/config.js';
 import express from 'express';
 import userRoutes from './components/users/users.routes.js';
+import { urlConfig } from './configs/index.js';
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.use(
 );
 app.use(
     cors({
-        origin: ['http://localhost:5173'],
+        origin: [urlConfig.FRONT_URL],
         credentials: true,
     })
 );

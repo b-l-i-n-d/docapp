@@ -4,7 +4,7 @@ import { theme as themeConfig } from '../../../configs/index';
 
 function ThemeSwitch({ theme }) {
     return (
-        <label className="swap swap-rotate text-base-content">
+        <label className="swap swap-rotate text-base-content px-3">
             <input type="checkbox" />
 
             <svg

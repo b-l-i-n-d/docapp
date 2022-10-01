@@ -8,7 +8,7 @@ const login = async (req, res) => {
 
     try {
         const accessToken = jwt.sign(
-            { _id: user._id, email: user.email, name: user.name },
+            { _id: user._id, email: user.email, name: user.name, role: user.role },
             jwtConfig.ACCESS_SECRET,
             { expiresIn: jwtConfig.ACCESS_EXP }
         );
@@ -28,7 +28,6 @@ const login = async (req, res) => {
             },
         });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ error: 'Something went wrong.' });
     }
 };
@@ -36,7 +35,6 @@ const login = async (req, res) => {
 const signup = async (req, res) => {
     const { name, email, password } = req.body;
     const hashPassword = await helpers.genBcrypt(password);
-    console.log(hashPassword);
 
     try {
         const result = await User.create({
@@ -46,7 +44,7 @@ const signup = async (req, res) => {
         });
 
         const accessToken = jwt.sign(
-            { _id: result._id, email: result.email, name: result.name },
+            { _id: result._id, email: result.email, name: result.name, role: result.role },
             jwtConfig.ACCESS_SECRET,
             {
                 expiresIn: jwtConfig.ACCESS_EXP,
