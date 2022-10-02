@@ -10,7 +10,7 @@ import {
 } from 'react-icons/ai';
 import { FaStethoscope } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { themeChange } from 'theme-change';
 import Logo from '../assets/logos/withoutText/docapp_light.svg';
 import LoadeerOverlay from '../components/common/LoaderOverlay';
@@ -29,6 +29,7 @@ function Main() {
     const [collapsed, setCollapsed] = useState(false);
     const [isNotLoggedout, setIsNotLoggedout] = useState(true);
     const { isLoading, error } = useLogoutUserQuery(undefined, { skip: isNotLoggedout });
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (error) {
@@ -72,6 +73,7 @@ function Main() {
             icon: <AiOutlineHome size={16} />,
             className:
                 'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            onClick: () => navigate('/', { replace: true }),
         },
         {
             label: 'Apply for Doctor',
@@ -79,6 +81,7 @@ function Main() {
             icon: <FaStethoscope size={16} />,
             className:
                 'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            onClick: () => navigate('/apply', { replace: true }),
         },
         {
             label: 'Appionments',
@@ -153,7 +156,7 @@ function Main() {
                 ) : (
                     <Menu
                         mode="inline"
-                        defaultSelectedKeys={['doctors']}
+                        defaultSelectedKeys={['home']}
                         className="bg-base-100"
                         items={userMenuItems}
                     />
@@ -166,7 +169,7 @@ function Main() {
                 <Header
                     className={`${
                         collapsed ? 'w-[calc(100%_-_80px)]' : 'w-[calc(100%_-_200px)]'
-                    } bg-base-100 fixed flex justify-end items-center py-0 px-5 transition-all duration-300 shadow-sm shadow-primary/20`}
+                    } bg-base-100 fixed flex justify-end items-center py-0 px-5 transition-all duration-300 shadow-sm shadow-primary/20 z-10`}
                 >
                     <ThemeSwitch theme={theme} />
                     <Dropdown
@@ -185,7 +188,9 @@ function Main() {
                 <Content className="mx-0 mt-16 mb-4 text-base-content bg-base-200">
                     {/* Outlet */}
 
-                    <Outlet />
+                    <div className="m-6">
+                        <Outlet />
+                    </div>
                 </Content>
                 <Footer className="text-center">Ant Design ©2018 Created by Ant UED</Footer>
             </Layout>

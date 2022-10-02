@@ -18,6 +18,10 @@ function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (isSuccess) {
+            navigate('/', { replace: true });
+        }
+
         if (error) {
             console.log(error);
             notification.open({

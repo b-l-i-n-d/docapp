@@ -4,6 +4,7 @@ import { themeChange } from 'theme-change';
 import './App.css';
 import { NotRequireAuth, PresistLogin, RequiredAuth } from './components/Auth';
 import Main from './layouts/Main';
+import ApplyDoctor from './pages/ApplyDoctor';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -19,6 +20,9 @@ function App() {
                 <Route element={<RequiredAuth />}>
                     <Route path="/" element={<Main />}>
                         <Route index element={<Home />} />
+                        <Route path="apply">
+                            <Route index element={<ApplyDoctor />} />
+                        </Route>
                     </Route>
                 </Route>
                 <Route element={<NotRequireAuth />}>
