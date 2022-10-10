@@ -1,3 +1,4 @@
+import { userModel } from '../../components/users/index.js';
 import { cookiesConfig, jwtConfig } from '../../configs/index.js';
 import { helpers } from '../../utils/index.js';
 
@@ -12,11 +13,16 @@ const verifyRefreshToken = async (req, res, next) => {
 
     const verifyToken = await helpers.verifyJWT(refreshToken, jwtConfig.REFRESH_SECRET);
 
+    const userData = await userModel.findById(verifyToken.data._id).lean();
+    if (!userData) {
+        return res.status(404).json({ error: 'Your data is not found.' });
+    }
+
     if (verifyToken.isExpired) {
         res.clearCookie(cookiesConfig.refresh.name);
 
         return res.status(401).json({
-            message: 'Your sessionnhas been experied.',
+            message: 'Your session has been experied.',
         });
     }
     if (verifyToken.isSecretNotValid) {

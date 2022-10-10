@@ -1,0 +1,142 @@
+[
+    {
+        "id": 1,
+        "name": "Pediatrics"
+    },
+    {
+        "id": 2,
+        "name": "Neurology"
+    },
+    {
+        "id": 3,
+        "name": "Oncology"
+    },
+    {
+        "id": 4,
+        "name": "Orthopedics"
+    },
+    {
+        "id": 5,
+        "name": "Pediatrics"
+    },
+    {
+        "id": 6,
+        "name": "Psychiatry"
+    },
+    {
+        "id": 7,
+        "name": "Surgery"
+    },
+    {
+        "id": 8,
+        "name": "Urology"
+    },
+    {
+        "id": 9,
+        "name": "Gynecology"
+    },
+    {
+        "id": 10,
+        "name": "Dermatology"
+    },
+    {
+        "id": 11,
+        "name": "Ophthalmology"
+    },
+    {
+        "id": 12,
+        "name": "ENT"
+    },
+    {
+        "id": 13,
+        "name": "Dentistry"
+    },
+    {
+        "id": 14,
+        "name": "Gastroenterology"
+    },
+    {
+        "id": 15,
+        "name": "Nephrology"
+    },
+    {
+        "id": 16,
+        "name": "Endocrinology"
+    },
+    {
+        "id": 17,
+        "name": "Rheumatology"
+    },
+    {
+        "id": 18,
+        "name": "Pulmonology"
+    },
+    {
+        "id": 19,
+        "name": "Hematology"
+    },
+    {
+        "id": 20,
+        "name": "Infectious Diseases"
+    },
+    {
+        "id": 21,
+        "name": "Allergy"
+    },
+    {
+        "id": 22,
+        "name": "Neonatology"
+    },
+    {
+        "id": 23,
+        "name": "Geriatrics"
+    },
+    {
+        "id": 24,
+        "name": "Obstetrics"
+    },
+    {
+        "id": 25,
+        "name": "Radiology"
+    },
+    {
+        "id": 26,
+        "name": "Anesthesiology"
+    },
+    {
+        "id": 27,
+        "name": "Pathology"
+    },
+    {
+        "id": 28,
+        "name": "Emergency Medicine"
+    },
+    {
+        "id": 29,
+        "name": "Physical Medicine and Rehabilitation"
+    },
+    {
+        "id": 30,
+        "name": "Sports Medicine"
+    },
+    {
+        "id": 31,
+        "name": "Plastic Surgery"
+    },
+    {
+        "id": 32,
+        "name": "Interventional Radiology"
+    },
+    {
+        "id": 33,
+        "name": "Interventional Cardiology"
+    },
+    {
+        "id": 34,
+        "name": "Interventional Neurology"
+    },
+    {
+        "id": 35,
+        "name": "Interventional Oncology"
+    }
+]

@@ -1,5 +1,29 @@
 import mongoose from 'mongoose';
 
+const notificationSchema = new mongoose.Schema(
+    {
+        type: {
+            type: String,
+            required: true,
+        },
+        title: {
+            type: String,
+            required: true,
+        },
+        message: {
+            type: String,
+            required: true,
+        },
+        data: {
+            type: Object,
+            required: true,
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
+
 const userSchema = mongoose.Schema(
     {
         name: {
@@ -23,15 +47,33 @@ const userSchema = mongoose.Schema(
             enum: ['user', 'admin'],
         },
         isDoctor: {
-            type: Boolean,
-            default: false,
-            enum: [false, true],
+            type: String,
+            default: 'no',
+            enum: ['no', 'pending', 'yes'],
         },
         isVerified: {
             type: Boolean,
             default: false,
             enum: [false, true],
         },
+        seenNotification: {
+            type: [notificationSchema],
+            required: true,
+            default: [],
+        },
+        unSeenNotification: [
+            {
+                content: {
+                    type: String,
+                    required: true,
+                },
+                timestamps: {
+                    type: Date,
+                    required: true,
+                    default: new Date(),
+                },
+            },
+        ],
     },
     {
         timestamps: true,

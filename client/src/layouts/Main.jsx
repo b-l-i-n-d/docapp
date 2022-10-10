@@ -71,31 +71,31 @@ function Main() {
             label: 'Home',
             key: 'home',
             icon: <AiOutlineHome size={16} />,
-            className:
-                'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            // className:
+            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
             onClick: () => navigate('/', { replace: true }),
         },
         {
             label: 'Apply for Doctor',
             key: 'applyForDoctor',
             icon: <FaStethoscope size={16} />,
-            className:
-                'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            // className:
+            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
             onClick: () => navigate('/apply', { replace: true }),
         },
         {
             label: 'Appionments',
             key: 'appionments',
             icon: <AiOutlineUnorderedList size={16} />,
-            className:
-                'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            // className:
+            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
         },
         {
             label: 'Profile',
             key: 'profile',
             icon: <AiOutlineProfile size={16} />,
-            className:
-                'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            // className:
+            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
         },
     ];
 
@@ -104,29 +104,34 @@ function Main() {
             label: 'Dashboard',
             key: 'dashboard',
             icon: <AiOutlineDashboard size={16} />,
-            className:
-                'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            // className:
+            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
         },
         {
             label: 'Users',
             key: 'users',
             icon: <AiOutlineUser size={16} />,
-            className:
-                'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            // className:
+            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
         },
         {
             label: 'Doctors',
             key: 'doctors',
             icon: <FaStethoscope size={16} />,
-            className:
-                'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            // className:
+            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+        },
+        {
+            label: 'Departments',
+            key: 'departments',
+            icon: <AiOutlineUnorderedList size={16} />,
         },
         {
             label: 'Profile',
             key: 'profile',
             icon: <AiOutlineProfile size={16} />,
-            className:
-                'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            // className:
+            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
         },
     ];
 
@@ -135,15 +140,16 @@ function Main() {
     ) : (
         <Layout hasSider>
             <Sider
+                breakpoint="lg"
                 collapsible
                 collapsed={collapsed}
                 onCollapse={(value) => setCollapsed(value)}
                 theme="light"
                 className="overflow-auto h-screen fixed left-0 top-0 bottom-0 z-10 bg-base-100 text-base-content shadow-sm shadow-primary/20"
             >
-                <div className="flex items-center p-4">
+                <div className="flex items-center pl-6 p-4">
                     <img src={Logo} alt="Logo" className="w-8 h-8" />
-                    <h1 className="ml-1 font-bold text-primary">DOCAPP</h1>
+                    {!collapsed && <h1 className="ml-1 font-bold text-primary">DOCAPP</h1>}
                 </div>
 
                 {user.role === 'admin' ? (
@@ -172,6 +178,7 @@ function Main() {
                     } bg-base-100 fixed flex justify-end items-center py-0 px-5 transition-all duration-300 shadow-sm shadow-primary/20 z-10`}
                 >
                     <ThemeSwitch theme={theme} />
+
                     <Dropdown
                         className="hover:bg-base-300 h-12 px-3 ml-2 bg-base-100 cursor-pointer rounded-md hover:text-primary-content shadow-sm shadow-primary/30"
                         overlay={menu}
@@ -181,7 +188,7 @@ function Main() {
                             <Avatar>
                                 <AiOutlineUser size={32} />
                             </Avatar>
-                            <h1 className="text-base-content font-bold text-lg">{user.name}</h1>
+                            <h1 className="text-base-content font-bold m-0">{user.name}</h1>
                         </Space>
                     </Dropdown>
                 </Header>

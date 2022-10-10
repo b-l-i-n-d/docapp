@@ -23,7 +23,6 @@ function Login() {
         }
 
         if (error) {
-            console.log(error);
             notification.open({
                 className:
                     'bg-base-100 rounded-2xl text-base-content antdNotificationMessage antdNotificationClose shadow-lg shadow-primary/30',

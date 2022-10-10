@@ -1,5 +1,24 @@
 import mongoose from 'mongoose';
 
+const chamberSchema = mongoose.Schema({
+    time: {
+        type: Array,
+        required: true,
+    },
+    activeDay: {
+        type: [String],
+        required: true,
+    },
+    fees: {
+        type: Number,
+        required: true,
+    },
+    location: {
+        type: String,
+        required: true,
+    },
+});
+
 const doctorSchema = mongoose.Schema(
     {
         userId: {
@@ -19,10 +38,14 @@ const doctorSchema = mongoose.Schema(
             type: Date,
             required: true,
         },
+        image: {
+            type: String,
+            required: true,
+        },
         gender: {
             type: String,
             required: true,
-            enum: ['Male', 'Female', 'Other'],
+            enum: ['male', 'female', 'other'],
         },
         presentAddress: {
             type: String,
@@ -30,39 +53,48 @@ const doctorSchema = mongoose.Schema(
         },
         nationalId: {
             type: Number,
+            trim: true,
             required: true,
+            unique: true,
         },
         bmdcRegNo: {
             type: Number,
+            trim: true,
+            required: true,
+            unique: true,
+        },
+        department: {
+            type: String,
+            required: true,
+        },
+        specialized: {
+            type: String,
+            required: true,
+        },
+        workplace: {
+            type: String,
             required: true,
         },
         email: {
             type: String,
+            trim: true,
             required: true,
+            unique: true,
+            lowercase: true,
         },
         chamber: {
-            type: Object,
+            type: chamberSchema,
             required: true,
-            startTime: {
-                type: Date,
-                required: true,
-            },
-            endTime: {
-                type: Date,
-                required: true,
-            },
-            activeDay: {
-                type: [String],
-                required: true,
-            },
-            location: {
-                type: String,
-                required: true,
-            },
+        },
+        status: {
+            type: String,
+            required: true,
+            default: 'pending',
+            enum: ['decilend', 'pending', 'approved'],
         },
     },
     {
-        timestamos: true,
+        timestamops: true,
     }
 );
 

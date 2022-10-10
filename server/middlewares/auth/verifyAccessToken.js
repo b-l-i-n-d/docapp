@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import userModel from '../../components/users/users.model.js';
+import { userModel } from '../../components/users/index.js';
 import { cookiesConfig, jwtConfig } from '../../configs/index.js';
 import { helpers } from '../../utils/index.js';
 
@@ -10,7 +10,12 @@ const verifyAccessToken = async (req, res, next) => {
 
     if (verifyToken.isExpired) {
         const userId = res.locals.data._id;
-        const userData = await userModel.findById(userId).select('_id name email').lean();
+        const userData = await userModel
+            .findById(userId)
+            .select('_id name email role isDoctor')
+            .lean();
+
+        console.log(userData);
 
         const encryptedData = await jwt.sign(userData, jwtConfig.ACCESS_SECRET, {
             expiresIn: jwtConfig.ACCESS_EXP,

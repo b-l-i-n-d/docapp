@@ -8,7 +8,13 @@ const login = async (req, res) => {
 
     try {
         const accessToken = jwt.sign(
-            { _id: user._id, email: user.email, name: user.name, role: user.role },
+            {
+                _id: user._id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+                isDoctor: user.isDoctor,
+            },
             jwtConfig.ACCESS_SECRET,
             { expiresIn: jwtConfig.ACCESS_EXP }
         );
@@ -41,10 +47,20 @@ const signup = async (req, res) => {
             name,
             email,
             password: hashPassword,
+            role: 'user',
+            isDoctor: 'no',
+            seenNotification: [],
+            unSeenNotification: [],
         });
 
         const accessToken = jwt.sign(
-            { _id: result._id, email: result.email, name: result.name, role: result.role },
+            {
+                _id: result._id,
+                email: result.email,
+                name: result.name,
+                role: result.role,
+                isDoctor: result.isDoctor,
+            },
             jwtConfig.ACCESS_SECRET,
             {
                 expiresIn: jwtConfig.ACCESS_EXP,

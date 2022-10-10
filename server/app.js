@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import 'dotenv/config.js';
 import express from 'express';
+import doctorRoutes from './components/doctors/doctors.routes.js';
 import userRoutes from './components/users/users.routes.js';
 import { urlConfig } from './configs/index.js';
 
@@ -31,5 +32,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/doctors', doctorRoutes);
 
 export default app;
