@@ -6,7 +6,13 @@ const router = express.Router();
 
 router.post(
     '/add',
-    [auth.isUserExists, auth.isPasswordCorrect, doctors.isDoctorExists],
+    [
+        auth.verifyRefreshToken,
+        auth.verifyAccessToken,
+        auth.isUserExists,
+        auth.isPasswordCorrect,
+        doctors.isDoctorExists,
+    ],
     doctorsController.createDoctor
 );
 

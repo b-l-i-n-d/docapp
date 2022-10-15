@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { themeChange } from 'theme-change';
 import LogoImg from '../assets/login/1.png';
-import { LoaderOverlay } from '../components/common';
+import { Common } from '../components';
 import ThemeSwitch from '../components/common/themes/ThemeSwitch';
 import { useLoginUserMutation } from '../redux/api/authAPI';
 
@@ -39,7 +39,7 @@ function Login() {
     };
 
     return isLoading ? (
-        <LoaderOverlay />
+        <Common.LoaderOverlay />
     ) : (
         <div className="hero min-h-screen bg-base-100">
             <div className="hero-content flex-col lg:flex-row-reverse w-full">

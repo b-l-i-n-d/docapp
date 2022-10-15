@@ -1,4 +1,5 @@
-/* eslint-disable import/prefer-default-export */
 import LoaderOverlay from './LoaderOverlay';
+import Menus from './Menus';
+import Notifications from './Notifications/Notifications';
 
-export { LoaderOverlay };
+export default { LoaderOverlay, Menus, Notifications };

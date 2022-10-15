@@ -103,4 +103,17 @@ const verifyToken = async (req, res) => {
     return res.status(200).json({ ...response });
 };
 
-export default { login, logout, signup, verifyToken };
+const getNotifications = async (req, res) => {
+    const userId = res.locals.data._id;
+    try {
+        const notificationData = await User.findById(userId)
+            .select('unSeenNotification seenNotification')
+            .lean();
+
+        res.status(200).json(notificationData);
+    } catch (error) {
+        res.status(500).json({ error: 'Something went wrong.' });
+    }
+};
+
+export default { login, logout, signup, verifyToken, getNotifications };

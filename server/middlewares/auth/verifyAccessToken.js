@@ -15,8 +15,6 @@ const verifyAccessToken = async (req, res, next) => {
             .select('_id name email role isDoctor')
             .lean();
 
-        console.log(userData);
-
         const encryptedData = await jwt.sign(userData, jwtConfig.ACCESS_SECRET, {
             expiresIn: jwtConfig.ACCESS_EXP,
         });

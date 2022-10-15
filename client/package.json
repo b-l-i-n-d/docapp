@@ -12,7 +12,7 @@
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.8.5",
-		"antd": "^4.22.7",
+		"antd": "^4.23.5",
 		"daisyui": "^2.24.0",
 		"js-cookie": "^3.0.1",
 		"jwt-decode": "^3.1.2",

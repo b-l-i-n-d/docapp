@@ -1,12 +1,12 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { useVerifyTokenQuery } from '../../redux/api/authAPI';
-import { LoaderOverlay } from '../common';
+import { Common } from '../index';
 
 function PresistLogin() {
     const { isLoading } = useVerifyTokenQuery();
 
-    return isLoading ? <LoaderOverlay /> : <Outlet />;
+    return isLoading ? <Common.LoaderOverlay /> : <Outlet />;
 }
 
 export default PresistLogin;

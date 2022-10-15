@@ -6,7 +6,7 @@
 	"repository": "https://github.com/b-l-i-n-d/docapp",
 	"type": "module",
 	"engines": {
-		"node": "17.4.0"
+		"node": "18.10.0"
 	},
 	"scripts": {
 		"start": "nodemon index.js",

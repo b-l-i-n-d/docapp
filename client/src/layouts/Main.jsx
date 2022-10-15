@@ -1,20 +1,11 @@
 import { Avatar, Dropdown, Layout, Menu, notification, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
-import {
-    AiOutlineDashboard,
-    AiOutlineHome,
-    AiOutlineLogout,
-    AiOutlineProfile,
-    AiOutlineUnorderedList,
-    AiOutlineUser
-} from 'react-icons/ai';
-import { FaStethoscope } from 'react-icons/fa';
+import { AiOutlineBell, AiOutlineLogout, AiOutlineUser } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { themeChange } from 'theme-change';
 import Logo from '../assets/logos/withoutText/docapp_light.svg';
-import LoadeerOverlay from '../components/common/LoaderOverlay';
-import ThemeSwitch from '../components/common/themes/ThemeSwitch';
+import { Common } from '../components';
 import { useLogoutUserQuery } from '../redux/api/authAPI';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -24,12 +15,11 @@ function Main() {
         themeChange(false);
     }, []);
 
-    const theme = localStorage.getItem('theme');
+    // const theme = localStorage.getItem('theme');
     const user = useSelector((store) => store.userState.user);
     const [collapsed, setCollapsed] = useState(false);
     const [isNotLoggedout, setIsNotLoggedout] = useState(true);
     const { isLoading, error } = useLogoutUserQuery(undefined, { skip: isNotLoggedout });
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (error) {
@@ -51,92 +41,23 @@ function Main() {
                 label: 'Profile',
                 key: 'profile',
                 icon: <AiOutlineUser size={16} />,
-                className:
-                    'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content rounded',
+                // className:
+                //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content rounded',
             },
             {
                 label: 'Logout',
                 key: 'logout',
                 icon: <AiOutlineLogout size={16} />,
-                className:
-                    'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content rounded',
+                // className:
+                //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content rounded',
                 onClick: () => setIsNotLoggedout(false),
             },
         ];
-        return <Menu className="bg-base-100 rounded-md" items={menuItems} />;
+        return <Menu className="bg-base-100" items={menuItems} />;
     };
 
-    const userMenuItems = [
-        {
-            label: 'Home',
-            key: 'home',
-            icon: <AiOutlineHome size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
-            onClick: () => navigate('/', { replace: true }),
-        },
-        {
-            label: 'Apply for Doctor',
-            key: 'applyForDoctor',
-            icon: <FaStethoscope size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
-            onClick: () => navigate('/apply', { replace: true }),
-        },
-        {
-            label: 'Appionments',
-            key: 'appionments',
-            icon: <AiOutlineUnorderedList size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
-        },
-        {
-            label: 'Profile',
-            key: 'profile',
-            icon: <AiOutlineProfile size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
-        },
-    ];
-
-    const adminMenuItems = [
-        {
-            label: 'Dashboard',
-            key: 'dashboard',
-            icon: <AiOutlineDashboard size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
-        },
-        {
-            label: 'Users',
-            key: 'users',
-            icon: <AiOutlineUser size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
-        },
-        {
-            label: 'Doctors',
-            key: 'doctors',
-            icon: <FaStethoscope size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
-        },
-        {
-            label: 'Departments',
-            key: 'departments',
-            icon: <AiOutlineUnorderedList size={16} />,
-        },
-        {
-            label: 'Profile',
-            key: 'profile',
-            icon: <AiOutlineProfile size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
-        },
-    ];
-
     return isLoading ? (
-        <LoadeerOverlay />
+        <Common.LoaderOverlay />
     ) : (
         <Layout hasSider>
             <Sider
@@ -152,21 +73,7 @@ function Main() {
                     {!collapsed && <h1 className="ml-1 font-bold text-primary">DOCAPP</h1>}
                 </div>
 
-                {user.role === 'admin' ? (
-                    <Menu
-                        mode="inline"
-                        defaultSelectedKeys={['dashboard']}
-                        className="bg-base-100"
-                        items={adminMenuItems}
-                    />
-                ) : (
-                    <Menu
-                        mode="inline"
-                        defaultSelectedKeys={['home']}
-                        className="bg-base-100"
-                        items={userMenuItems}
-                    />
-                )}
+                {user.role === 'admin' ? <Common.Menus.AdminMenu /> : <Common.Menus.UserMenu />}
             </Sider>
             <Layout
                 className="site-layout transition-all duration-300"
@@ -175,12 +82,21 @@ function Main() {
                 <Header
                     className={`${
                         collapsed ? 'w-[calc(100%_-_80px)]' : 'w-[calc(100%_-_200px)]'
-                    } bg-base-100 fixed flex justify-end items-center py-0 px-5 transition-all duration-300 shadow-sm shadow-primary/20 z-10`}
+                    } bg-base-100 fixed py-0 px-5 transition-all duration-300 shadow-sm shadow-primary/20 z-10 space-x-2 flex items-center justify-end`}
                 >
-                    <ThemeSwitch theme={theme} />
+                    <Dropdown
+                        className="cursor-pointer hover:bg-base-200 h-full"
+                        overlay={<Common.Notifications />}
+                        trigger={['click']}
+                        placement="bottomRight"
+                    >
+                        <AiOutlineBell size={24} />
+                    </Dropdown>
+
+                    {/* <ThemeSwitch theme={theme} /> */}
 
                     <Dropdown
-                        className="hover:bg-base-300 h-12 px-3 ml-2 bg-base-100 cursor-pointer rounded-md hover:text-primary-content shadow-sm shadow-primary/30"
+                        className="hover:bg-base-300 px-3 bg-base-100 cursor-pointer hover:text-primary-content "
                         overlay={menu}
                         placement="bottomRight"
                     >

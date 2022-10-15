@@ -6,16 +6,16 @@ const notificationSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        title: {
-            type: String,
-            required: true,
-        },
         message: {
             type: String,
             required: true,
         },
         data: {
             type: Object,
+            required: true,
+        },
+        onClickPath: {
+            type: String,
             required: true,
         },
     },
@@ -61,19 +61,11 @@ const userSchema = mongoose.Schema(
             required: true,
             default: [],
         },
-        unSeenNotification: [
-            {
-                content: {
-                    type: String,
-                    required: true,
-                },
-                timestamps: {
-                    type: Date,
-                    required: true,
-                    default: new Date(),
-                },
-            },
-        ],
+        unSeenNotification: {
+            type: [notificationSchema],
+            required: true,
+            default: [],
+        },
     },
     {
         timestamps: true,

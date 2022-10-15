@@ -1,6 +1,11 @@
 import { v2 as cloudinary } from 'cloudinary';
 import jwt from 'jsonwebtoken';
-import { cloudinaryConfig, cookiesConfig, jwtConfig } from '../../configs/index.js';
+import {
+    cloudinaryConfig,
+    cookiesConfig,
+    jwtConfig,
+    notificationTypes,
+} from '../../configs/index.js';
 import { helpers } from '../../utils/index.js';
 import { userModel } from '../users/index.js';
 import Doctor from './doctors.model.js';
@@ -69,16 +74,31 @@ const createDoctor = async (req, res) => {
                 ...cookiesConfig.access.options,
                 overwrite: true,
             });
-            // return res.status(200).json({
-            //     isAuth: true,
-            //     data: {
-            //         accessToken: cookiesConfig.access.name,
-            //     },
-            // });
-            const admin = await userModel.findOne({ role: 'admin' }).lean();
-            console.log(admin);
 
-            return helpers.tokenResponse(accessToken);
+            const admin = await userModel.findOne({ role: 'admin' }).lean();
+
+            const { unSeenNotification } = admin;
+            unSeenNotification.push({
+                type: notificationTypes.NEW_DOCTOR_REQUEST,
+                message: `${result.name} has requested for doctor account.`,
+                data: {
+                    doctorId: result._id,
+                    userId: user._id,
+                    name: result.name,
+                },
+                onClickPath: `/admin/doctors`,
+            });
+
+            await userModel
+                .findByIdAndUpdate(admin._id, { unSeenNotification }, { new: true })
+                .lean();
+
+            return res.status(200).json({
+                isAuth: true,
+                data: {
+                    accessToken: cookiesConfig.access.name,
+                },
+            });
         }
 
         return res.status(200).json(result);

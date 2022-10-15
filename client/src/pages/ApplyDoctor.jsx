@@ -11,7 +11,7 @@ import {
     Row,
     Select,
     TimePicker,
-    Upload
+    Upload,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -246,11 +246,10 @@ function ApplyDoctor() {
                                     ) : (
                                         <div>
                                             <AiOutlinePlus />
-                                            <div className="mt-2">Upload</div>
+                                            <div className="mt-2">Select Image</div>
                                         </div>
                                     )}
                                 </Upload>
-                                {/* <Input type="file" /> */}
                             </Form.Item>
                         </Col>
                     </Row>

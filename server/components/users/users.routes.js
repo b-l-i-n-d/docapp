@@ -17,4 +17,10 @@ router.get(
     usersController.verifyToken
 );
 
+router.get(
+    '/notifications',
+    [auth.verifyRefreshToken, auth.verifyAccessToken],
+    usersController.getNotifications
+);
+
 export default router;
