@@ -7,29 +7,27 @@ import {
     AiOutlineUser,
 } from 'react-icons/ai';
 import { FaStethoscope } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 function AdminMenu() {
+    const navigate = useNavigate();
     const adminMenuItems = [
         {
             label: 'Dashboard',
             key: 'dashboard',
             icon: <AiOutlineDashboard size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            onClick: () => navigate('/', { replace: true }),
         },
         {
             label: 'Users',
             key: 'users',
             icon: <AiOutlineUser size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
         },
         {
             label: 'Doctors',
             key: 'doctors',
             icon: <FaStethoscope size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
+            onClick: () => navigate('/doctors', { replace: true }),
         },
         {
             label: 'Departments',
@@ -40,8 +38,6 @@ function AdminMenu() {
             label: 'Profile',
             key: 'profile',
             icon: <AiOutlineProfile size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
         },
     ];
     return (

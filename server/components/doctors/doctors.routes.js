@@ -16,4 +16,12 @@ router.post(
     doctorsController.createDoctor
 );
 
+router.get('/get', [auth.verifyRefreshToken, auth.verifyAccessToken], doctorsController.getDoctor);
+
+router.get(
+    '/get-all',
+    [auth.verifyRefreshToken, auth.verifyAccessToken],
+    doctorsController.getAllDoctors
+);
+
 export default router;

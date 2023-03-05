@@ -1,4 +1,4 @@
-import { Avatar, Dropdown, Layout, Menu, notification, Space } from 'antd';
+import { Avatar, Badge, Dropdown, Layout, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineBell, AiOutlineLogout, AiOutlineUser } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
@@ -6,7 +6,8 @@ import { Outlet } from 'react-router-dom';
 import { themeChange } from 'theme-change';
 import Logo from '../assets/logos/withoutText/docapp_light.svg';
 import { Common } from '../components';
-import { useLogoutUserQuery } from '../redux/api/authAPI';
+import { useLazyLogoutUserQuery } from '../redux/api/authAPI';
+import { useGetNotificationQuery } from '../redux/api/userAPI';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -17,56 +18,69 @@ function Main() {
 
     // const theme = localStorage.getItem('theme');
     const user = useSelector((store) => store.userState.user);
+    const notification = useSelector((store) => store.userState.notification);
     const [collapsed, setCollapsed] = useState(false);
-    const [isNotLoggedout, setIsNotLoggedout] = useState(true);
-    const { isLoading, error } = useLogoutUserQuery(undefined, { skip: isNotLoggedout });
+    const [logOutUser, { isLoading: isLogOutLoading, error: logOutError }] =
+        useLazyLogoutUserQuery();
+
+    const { isLoading, error } = useGetNotificationQuery();
 
     useEffect(() => {
-        if (error) {
-            console.log(error);
+        if (logOutError) {
             notification.open({
                 className:
                     'bg-base-100 rounded-2xl text-base-content antdNotificationMessage antdNotificationClose shadow-lg shadow-primary/30',
                 type: 'error',
-                message: error.data ? error.data.error : 'Can not connect to server.',
-                description: error.data ? error.data.description : 'Please try again.',
+                message: logOutError.data ? logOutError.data.error : 'Can not connect to server.',
+                description: logOutError.data ? logOutError.data.description : 'Please try again.',
                 placement: 'bottomRight',
             });
         }
-    }, [error, isLoading]);
+        if (error) {
+            notification.open({
+                className:
+                    'bg-base-100 rounded-2xl text-base-content antdNotificationMessage antdNotificationClose shadow-lg shadow-primary/30',
+                type: 'error',
+                message: logOutError.data ? logOutError.data.error : 'Can not connect to server.',
+                description: logOutError.data ? logOutError.data.description : 'Please try again.',
+                placement: 'bottomRight',
+            });
+        }
+    }, [logOutError, isLogOutLoading, notification, isLoading, error]);
 
-    const menu = () => {
-        const menuItems = [
-            {
-                label: 'Profile',
-                key: 'profile',
-                icon: <AiOutlineUser size={16} />,
-                // className:
-                //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content rounded',
-            },
-            {
-                label: 'Logout',
-                key: 'logout',
-                icon: <AiOutlineLogout size={16} />,
-                // className:
-                //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content rounded',
-                onClick: () => setIsNotLoggedout(false),
-            },
-        ];
-        return <Menu className="bg-base-100" items={menuItems} />;
-    };
+    const dropDownMenuItems = [
+        {
+            label: 'Profile',
+            key: 'profile',
+            icon: <AiOutlineUser size={16} />,
+        },
+        {
+            label: 'Logout',
+            key: 'logout',
+            icon: <AiOutlineLogout size={16} />,
+            onClick: () => logOutUser(),
+        },
+    ];
 
-    return isLoading ? (
+    return isLogOutLoading ? (
         <Common.LoaderOverlay />
     ) : (
         <Layout hasSider>
             <Sider
+                style={{
+                    overflow: 'auto',
+                    height: '100vh',
+                    position: 'fixed',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                }}
                 breakpoint="lg"
                 collapsible
                 collapsed={collapsed}
                 onCollapse={(value) => setCollapsed(value)}
                 theme="light"
-                className="overflow-auto h-screen fixed left-0 top-0 bottom-0 z-10 bg-base-100 text-base-content shadow-sm shadow-primary/20"
+                className="z-10 bg-base-100 text-base-content shadow-sm shadow-primary/20"
             >
                 <div className="flex items-center pl-6 p-4">
                     <img src={Logo} alt="Logo" className="w-8 h-8" />
@@ -77,27 +91,39 @@ function Main() {
             </Sider>
             <Layout
                 className="site-layout transition-all duration-300"
-                style={{ margin: collapsed ? '0 0 0 80px' : '0 0 0 200px' }}
+                style={{ marginLeft: collapsed ? 70 : 190 }}
             >
                 <Header
+                    style={{
+                        position: 'sticky',
+                        top: 0,
+                        zIndex: 1,
+                        width: '100%',
+                    }}
                     className={`${
                         collapsed ? 'w-[calc(100%_-_80px)]' : 'w-[calc(100%_-_200px)]'
-                    } bg-base-100 fixed py-0 px-5 transition-all duration-300 shadow-sm shadow-primary/20 z-10 space-x-2 flex items-center justify-end`}
+                    } bg-base-100 py-0 px-5 transition-all duration-300 shadow-sm shadow-primary/20 z-10 space-x-2 flex items-center justify-end`}
                 >
-                    <Dropdown
-                        className="cursor-pointer hover:bg-base-200 h-full"
-                        overlay={<Common.Notifications />}
-                        trigger={['click']}
-                        placement="bottomRight"
-                    >
-                        <AiOutlineBell size={24} />
-                    </Dropdown>
+                    <Badge count={notification?.unSeenNotification?.length}>
+                        <Dropdown
+                            className="cursor-pointer hover:bg-base-200 h-full"
+                            // eslint-disable-next-line react/no-unstable-nested-components
+                            dropdownRender={() => (
+                                <Common.Notifications notificationData={notification} />
+                            )}
+                            trigger={['click']}
+                            placement="bottomRight"
+                        >
+                            <AiOutlineBell size={24} />
+                        </Dropdown>
+                    </Badge>
 
                     {/* <ThemeSwitch theme={theme} /> */}
 
                     <Dropdown
                         className="hover:bg-base-300 px-3 bg-base-100 cursor-pointer hover:text-primary-content "
-                        overlay={menu}
+                        // overlay={menu}
+                        menu={{ items: dropDownMenuItems }}
                         placement="bottomRight"
                     >
                         <Space>
@@ -108,14 +134,12 @@ function Main() {
                         </Space>
                     </Dropdown>
                 </Header>
-                <Content className="mx-0 mt-16 mb-4 text-base-content bg-base-200">
-                    {/* Outlet */}
-
-                    <div className="m-6">
+                <Content className="text-base-content bg-base-200">
+                    <div className="m-5">
                         <Outlet />
                     </div>
                 </Content>
-                <Footer className="text-center">Ant Design ©2018 Created by Ant UED</Footer>
+                <Footer className="text-center">DOCAPP @2023</Footer>
             </Layout>
         </Layout>
     );

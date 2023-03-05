@@ -1,6 +1,6 @@
 import Cookie from 'js-cookie';
 
 export default async function cookieDestroyer() {
-    await Cookie.remove('accessToken');
-    await Cookie.remove('refreshToken');
+    await Cookie.remove('access_token');
+    await Cookie.remove('refresh_token');
 }

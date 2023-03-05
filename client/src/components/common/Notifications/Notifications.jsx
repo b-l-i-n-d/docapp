@@ -2,17 +2,17 @@ import { Card, Tabs } from 'antd';
 import React from 'react';
 import NotificationList from './NotificationList';
 
-function Notifications() {
+function Notifications({ notificationData }) {
     const notificationTabs = [
         {
             label: 'Unseen Notifications',
             key: 'unseen',
-            children: <NotificationList />,
+            children: <NotificationList data={notificationData?.unSeenNotification} />,
         },
         {
             label: 'Seen Notifications',
             key: 'seen',
-            children: <NotificationList />,
+            children: <NotificationList data={notificationData?.seenNotification} type="seen" />,
         },
     ];
     return (

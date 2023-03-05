@@ -11,8 +11,6 @@ function UserMenu() {
             label: 'Home',
             key: 'home',
             icon: <AiOutlineHome size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
             onClick: () => navigate('/', { replace: true }),
         },
         {
@@ -42,7 +40,7 @@ function UserMenu() {
     return (
         <Menu
             mode="inline"
-            defaultSelectedKeys={['dashboard']}
+            defaultSelectedKeys={['home']}
             className="bg-base-100"
             items={userMenuItems}
         />

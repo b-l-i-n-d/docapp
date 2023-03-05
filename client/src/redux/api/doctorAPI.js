@@ -28,7 +28,47 @@ export const doctorAPI = createApi({
                 }
             },
         }),
+        getDoctor: builder.query({
+            query() {
+                return {
+                    url: 'get',
+                    method: 'GET',
+                    credentials: 'include',
+                };
+            },
+
+            async onQueryStarted(args, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    return await data;
+                } catch (error) {
+                    console.log(error);
+                    return error;
+                }
+            },
+        }),
+        getAllDoctors: builder.query({
+            query() {
+                return {
+                    url: 'get-all',
+                    method: 'GET',
+                    credentials: 'include',
+                };
+            },
+
+            async onQueryStarted(args, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    console.log('🚀 ~ file: doctorAPI.js:62 ~ onQueryStarted ~ data:', data);
+                    return await data;
+                } catch (error) {
+                    console.log(error);
+                    return error;
+                }
+            },
+        }),
     }),
 });
 
-export const { useAddDoctorMutation, usePrefetch } = doctorAPI;
+export const { useAddDoctorMutation, useGetDoctorQuery, useGetAllDoctorsQuery, usePrefetch } =
+    doctorAPI;

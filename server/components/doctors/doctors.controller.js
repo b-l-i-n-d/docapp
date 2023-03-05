@@ -8,6 +8,7 @@ import {
 } from '../../configs/index.js';
 import { helpers } from '../../utils/index.js';
 import { userModel } from '../users/index.js';
+import User from '../users/users.model.js';
 import Doctor from './doctors.model.js';
 
 cloudinary.config({
@@ -25,6 +26,7 @@ const createDoctor = async (req, res) => {
         image,
         gender,
         presentAddress,
+        doctorType,
         nationalId,
         bmdcRegNo,
         department,
@@ -44,6 +46,7 @@ const createDoctor = async (req, res) => {
             image: imageResult.secure_url,
             gender,
             presentAddress,
+            doctorType,
             nationalId,
             bmdcRegNo,
             email: user.email,
@@ -87,6 +90,7 @@ const createDoctor = async (req, res) => {
                     name: result.name,
                 },
                 onClickPath: `/admin/doctors`,
+                createdAt: Date.now(),
             });
 
             await userModel
@@ -108,4 +112,33 @@ const createDoctor = async (req, res) => {
     }
 };
 
-export default { createDoctor };
+const getDoctor = async (req, res) => {
+    const userId = res.locals.data._id;
+
+    try {
+        const result = await Doctor.findOne({ userId }).lean();
+
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};
+
+const getAllDoctors = async (req, res) => {
+    const userId = res.locals.data._id;
+
+    try {
+        const user = await User.findOne({ userId }).lean();
+
+        if (user.role === 'admin') {
+            const result = await Doctor.find({}).lean();
+
+            return res.status(200).json(result);
+        }
+        return res.status(200).json({ message: 'You are not authorized to access this route' });
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};
+
+export default { createDoctor, getDoctor, getAllDoctors };

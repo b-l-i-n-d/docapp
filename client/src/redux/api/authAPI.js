@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { cookieDestroyer, cookieExtractor } from '../../helpers/index';
-import { setUser } from '../features/users/userSlice';
+import { logout, setUser } from '../features/users/userSlice';
+import { doctorAPI } from './doctorAPI';
+import { userAPI } from './userAPI';
 
 export const authAPI = createApi({
     reducerPath: 'authApi',
@@ -59,7 +61,9 @@ export const authAPI = createApi({
                     if (data) {
                         await cookieDestroyer();
                     }
-                    dispatch(setUser(null));
+                    dispatch(logout());
+                    dispatch(userAPI.util.resetApiState());
+                    dispatch(doctorAPI.util.resetApiState());
                 } catch (error) {
                     console.log(error);
                 }
@@ -89,7 +93,7 @@ export const authAPI = createApi({
 export const {
     useLoginUserMutation,
     useSignupUserMutation,
-    useLogoutUserQuery,
+    useLazyLogoutUserQuery,
     useVerifyTokenQuery,
     usePrefetch,
 } = authAPI;

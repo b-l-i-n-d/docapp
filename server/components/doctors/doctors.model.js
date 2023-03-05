@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
-const chamberSchema = mongoose.Schema({
+const chamberSchema = new mongoose.Schema({
     time: {
         type: Array,
         required: true,
     },
     activeDay: {
-        type: [String],
+        type: Array,
         required: true,
     },
     fees: {
@@ -19,7 +19,7 @@ const chamberSchema = mongoose.Schema({
     },
 });
 
-const doctorSchema = mongoose.Schema(
+const doctorSchema = new mongoose.Schema(
     {
         userId: {
             type: mongoose.Types.ObjectId,
@@ -45,11 +45,16 @@ const doctorSchema = mongoose.Schema(
         gender: {
             type: String,
             required: true,
-            enum: ['male', 'female', 'other'],
+            enum: ['Male', 'Female', 'Other'],
         },
         presentAddress: {
             type: String,
             required: true,
+        },
+        doctorType: {
+            type: String,
+            required: true,
+            enum: ['Medical', 'Dental'],
         },
         nationalId: {
             type: Number,

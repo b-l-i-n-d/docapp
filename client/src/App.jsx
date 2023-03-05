@@ -2,12 +2,9 @@ import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { themeChange } from 'theme-change';
 import './App.css';
-import { NotRequireAuth, PresistLogin, RequiredAuth } from './components/Auth';
+import { AdminOnly, NotRequireAuth, PresistLogin, RequiredAuth } from './components/Auth';
 import Main from './layouts/Main';
-import ApplyDoctor from './pages/ApplyDoctor';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+import { Admin, Home, Login, Signup, User } from './pages';
 
 function App() {
     useEffect(() => {
@@ -21,9 +18,16 @@ function App() {
                     <Route path="/" element={<Main />}>
                         <Route index element={<Home />} />
                         <Route path="apply">
-                            <Route index element={<ApplyDoctor />} />
+                            <Route index element={<User.ApplyDoctor />} />
+                        </Route>
+
+                        <Route element={<AdminOnly />}>
+                            <Route path="doctors">
+                                <Route index element={<Admin.Doctors />} />
+                            </Route>
                         </Route>
                     </Route>
+                    <Route path="*" element={<div>404</div>} />
                 </Route>
                 <Route element={<NotRequireAuth />}>
                     <Route path="/login" element={<Login />} />

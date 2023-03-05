@@ -1,30 +1,30 @@
 import mongoose from 'mongoose';
 
-const notificationSchema = new mongoose.Schema(
-    {
-        type: {
-            type: String,
-            required: true,
-        },
-        message: {
-            type: String,
-            required: true,
-        },
-        data: {
-            type: Object,
-            required: true,
-        },
-        onClickPath: {
-            type: String,
-            required: true,
-        },
+const notificationSchema = new mongoose.Schema({
+    type: {
+        type: String,
+        required: true,
     },
-    {
-        timestamps: true,
-    }
-);
+    message: {
+        type: String,
+        required: true,
+    },
+    data: {
+        type: Object,
+        required: true,
+    },
+    onClickPath: {
+        type: String,
+        required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+        required: true,
+    },
+});
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
     {
         name: {
             type: String,
