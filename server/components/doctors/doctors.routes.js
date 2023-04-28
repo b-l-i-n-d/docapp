@@ -4,8 +4,16 @@ import { doctorsController } from './index.js';
 
 const router = express.Router();
 
+// Get all doctors - only for admin
+router.get(
+    '/',
+    [auth.verifyRefreshToken, auth.verifyAccessToken, auth.isAdmin],
+    doctorsController.getAllDoctors
+);
+
+// Create new doctor
 router.post(
-    '/add',
+    '/',
     [
         auth.verifyRefreshToken,
         auth.verifyAccessToken,
@@ -16,12 +24,27 @@ router.post(
     doctorsController.createDoctor
 );
 
-router.get('/get', [auth.verifyRefreshToken, auth.verifyAccessToken], doctorsController.getDoctor);
+// Get apptoved doctors
+router.get('/approved', doctorsController.getApprovedDoctors);
 
-router.get(
-    '/get-all',
+// Get my doctor info
+router.get('/me', [auth.verifyRefreshToken, auth.verifyAccessToken], doctorsController.getDoctor);
+
+// Get doctor by id
+router.get('/:id', [auth.verifyRefreshToken, auth.verifyAccessToken], doctorsController.getDoctor);
+
+// Update doctor by id
+router.patch(
+    '/:id',
     [auth.verifyRefreshToken, auth.verifyAccessToken],
-    doctorsController.getAllDoctors
+    doctorsController.updateDoctor
+);
+
+// Update doctor status by id (approve or reject) - only for admin
+router.patch(
+    '/:id/update-status',
+    [auth.verifyRefreshToken, auth.verifyAccessToken, auth.isAdmin],
+    doctorsController.updateDoctorStatus
 );
 
 export default router;

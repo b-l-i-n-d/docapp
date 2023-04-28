@@ -38,4 +38,10 @@ router.delete(
     usersController.deleteNotification
 );
 
+router.get(
+    '/allUsers',
+    [auth.verifyRefreshToken, auth.verifyAccessToken, auth.isAdmin],
+    usersController.getAllUsers
+);
+
 export default router;

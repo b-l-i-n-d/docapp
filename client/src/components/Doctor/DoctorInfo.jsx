@@ -3,6 +3,7 @@ import { Card, Descriptions, Divider, Steps } from 'antd';
 import dayjs from 'dayjs';
 import React from 'react';
 import { AiOutlineFileDone, AiOutlineUser } from 'react-icons/ai';
+import { VscVerified } from 'react-icons/vsc';
 
 function DoctorInfo({ doctorData }) {
     return (
@@ -20,13 +21,18 @@ function DoctorInfo({ doctorData }) {
                             {
                                 title: 'Verification',
                                 description: 'Waiting for verification',
-                                status: 'process',
-                                icon: <LoadingOutlined />,
+                                status: doctorData.status === 'approved' ? 'finish' : 'process',
+                                icon:
+                                    doctorData.status === 'approved' ? (
+                                        <VscVerified />
+                                    ) : (
+                                        <LoadingOutlined />
+                                    ),
                             },
                             {
                                 title: 'Done',
                                 description: 'Doctor account is approved',
-                                status: 'wait',
+                                status: doctorData.status === 'approved' ? 'finish' : 'wait',
                                 icon: <AiOutlineFileDone />,
                             },
                         ]}
@@ -111,16 +117,16 @@ function DoctorInfo({ doctorData }) {
                     </Descriptions.Item>
                     <Descriptions.Item label="Fees">{doctorData.chamber.fees}</Descriptions.Item>
                     <Descriptions.Item label="Chamber Days">
-                        {doctorData.chamber.activeDay.map((day) => (
-                            <span key={day}>
-                                {day} <Divider type="vertical" />
-                            </span>
+                        {doctorData.chamber.days.map((day) => (
+                            <div key={day._id}>
+                                <span>{day.day}</span>
+                                <Divider type="vertical" />
+                                <span>
+                                    {dayjs(day.time[0]).format('hh:mm:a')} -{' '}
+                                    {dayjs(day.time[1]).format('hh:mm:a')}
+                                </span>
+                            </div>
                         ))}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Chamber Time">
-                        <span>Start Time: {dayjs(doctorData.chamber.time[0]).format('hh:mm')}</span>
-                        <Divider type="vertical" />
-                        <span>End Time: {dayjs(doctorData.chamber.time[1]).format('hh:mm')}</span>
                     </Descriptions.Item>
                 </Descriptions>
             </>

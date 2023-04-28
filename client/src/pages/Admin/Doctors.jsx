@@ -1,11 +1,49 @@
-import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Table, Tag, Tooltip, Typography } from 'antd';
+import {
+    CheckCircleOutlined,
+    CloseCircleOutlined,
+    DeleteOutlined,
+    DownOutlined,
+    SyncOutlined,
+} from '@ant-design/icons';
+import {
+    Avatar,
+    Button,
+    Card,
+    Divider,
+    Dropdown,
+    Input,
+    Space,
+    Table,
+    Tag,
+    Tooltip,
+    Typography,
+} from 'antd';
 import dayjs from 'dayjs';
-import React from 'react';
-import { useGetAllDoctorsQuery } from '../../redux/api/doctorAPI';
+import React, { useEffect, useState } from 'react';
+import departmnetData from '../../assets/data/departmentData.json';
+import { useGetAllDoctorsQuery, useUpdateStatusMutation } from '../../redux/api/doctorAPI';
 
 function Doctors() {
-    const { data } = useGetAllDoctorsQuery();
+    const { data: doctors, isLoading: isGetAllDoctorsLoading } = useGetAllDoctorsQuery();
+    const [updateDoctorStatus, { isLoading: isUpdateStatusLoading, data: updatedDoctor }] =
+        useUpdateStatusMutation();
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredInfo, setFilteredInfo] = useState({});
+
+    const actionDropdownOnclick = (doctorId, doctorStatus) => {
+        updateDoctorStatus({
+            id: doctorId,
+            status: doctorStatus,
+        });
+    };
+
+    useEffect(() => {
+        if (updatedDoctor) {
+            console.log('updatedDoctor', updatedDoctor);
+        }
+    }, [isUpdateStatusLoading, updatedDoctor, doctors, searchQuery]);
+
     const columns = [
         {
             title: 'ID',
@@ -91,6 +129,27 @@ function Doctors() {
                     {title}
                 </Tooltip>
             ),
+            filteredValue: filteredInfo.title || null,
+            filters: [
+                {
+                    text: 'Dr.',
+                    value: 'Dr.',
+                },
+                {
+                    text: 'Prof. Dr.',
+                    value: 'Prof. Dr.',
+                },
+                {
+                    text: 'Assoc. Prof. Dr.',
+                    value: 'Assoc. Prof. Dr.',
+                },
+                {
+                    text: 'Asst. Prof. Dr.',
+                    value: 'Asst. Prof. Dr.',
+                },
+            ],
+            onFilter: (value, record) => record.title === value,
+            filterSearch: true,
         },
         {
             title: 'Present Address',
@@ -143,6 +202,13 @@ function Doctors() {
                     {department}
                 </Tooltip>
             ),
+            filteredValue: filteredInfo.department || null,
+            filters: departmnetData.map((department) => ({
+                text: department.name,
+                value: department.name,
+            })),
+            onFilter: (value, record) => record.department === value,
+            filterSearch: true,
         },
         {
             title: 'Specialized in',
@@ -202,33 +268,27 @@ function Doctors() {
                     render: (chamber) => (
                         <Tooltip
                             placement="topLeft"
-                            title={chamber?.activeDay.map((day) => (
-                                <span>{day}, </span>
+                            title={chamber?.days?.map((day) => (
+                                <div key={day._id}>
+                                    <span>{day.day}</span>
+                                    <Divider type="vertical" />
+                                    <span>
+                                        {dayjs(day.time[0]).format('hh:mm:a')} -{' '}
+                                        {dayjs(day.time[1]).format('hh:mm:a')}
+                                    </span>
+                                </div>
                             ))}
                         >
-                            {chamber?.activeDay.map((day) => (
-                                <Typography.Text>{day}, </Typography.Text>
+                            {chamber?.days.map((day) => (
+                                <div key={day._id}>
+                                    <span>{day.day}</span>
+                                    <Divider type="vertical" />
+                                    <span>
+                                        {dayjs(day.time[0]).format('hh:mm:a')} -{' '}
+                                        {dayjs(day.time[1]).format('hh:mm:a')}
+                                    </span>
+                                </div>
                             ))}
-                        </Tooltip>
-                    ),
-                },
-                {
-                    title: 'Time',
-                    dataIndex: 'chamber',
-                    key: 'time',
-                    ellipsis: {
-                        showTitle: false,
-                    },
-                    render: (chamber) => (
-                        <Tooltip
-                            placement="topLeft"
-                            title={`Start time: ${dayjs(chamber?.time[0]).format(
-                                'hh:mm:a'
-                            )} - End time: ${dayjs(chamber?.time[1]).format('hh:mm:a')}`}
-                        >
-                            {`Start time: ${dayjs(chamber?.time[0]).format(
-                                'hh:mm:a'
-                            )} - End time: ${dayjs(chamber?.time[1]).format('hh:mm:a')}`}
                         </Tooltip>
                     ),
                 },
@@ -262,31 +322,158 @@ function Doctors() {
                         );
                 }
             },
+            filteredValue: filteredInfo.status || null,
+            filters: [
+                {
+                    text: 'Pending',
+                    value: 'pending',
+                },
+                {
+                    text: 'Approved',
+                    value: 'approved',
+                },
+                {
+                    text: 'Rejected',
+                    value: 'rejected',
+                },
+            ],
+            onFilter: (value, record) => record.status === value,
+            filterSearch: true,
         },
         {
-            title: 'Action',
-            key: 'action',
+            title: 'Actions',
             dataIndex: 'status',
+            key: 'action',
+            width: 120,
             fixed: 'right',
-            width: 110,
-            render: (status) => status === 'pending' && <Button>Approve</Button>,
+            render: (status, record) => {
+                switch (status) {
+                    case 'approved':
+                        return (
+                            <Space size="middle">
+                                <Dropdown
+                                    menu={{
+                                        items: [
+                                            {
+                                                key: '2',
+                                                label: 'Reject',
+                                                icon: <CloseCircleOutlined />,
+                                                onClick: () =>
+                                                    actionDropdownOnclick(record._id, 'rejected'),
+                                            },
+                                        ],
+                                    }}
+                                >
+                                    <Button>
+                                        Actions <DownOutlined />
+                                    </Button>
+                                </Dropdown>
+                            </Space>
+                        );
+                    case 'rejected':
+                        return (
+                            <Space size="middle">
+                                <Dropdown
+                                    menu={{
+                                        items: [
+                                            {
+                                                key: '1',
+                                                label: 'Approve',
+                                                icon: <CheckCircleOutlined />,
+                                                onClick: () =>
+                                                    actionDropdownOnclick(record._id, 'approved'),
+                                            },
+                                        ],
+                                    }}
+                                >
+                                    <Button>
+                                        Actions <DownOutlined />
+                                    </Button>
+                                </Dropdown>
+                            </Space>
+                        );
+                    default:
+                        return (
+                            <Space size="middle">
+                                <Dropdown
+                                    menu={{
+                                        items: [
+                                            {
+                                                key: '1',
+                                                label: 'Approve',
+                                                icon: <CheckCircleOutlined />,
+                                                onClick: () =>
+                                                    actionDropdownOnclick(record._id, 'approved'),
+                                            },
+                                            {
+                                                key: '2',
+                                                label: 'Reject',
+                                                icon: <CloseCircleOutlined />,
+                                                onClick: () =>
+                                                    actionDropdownOnclick(record._id, 'rejected'),
+                                            },
+                                        ],
+                                    }}
+                                >
+                                    <Button>
+                                        Actions <DownOutlined />
+                                    </Button>
+                                </Dropdown>
+                            </Space>
+                        );
+                }
+            },
         },
     ];
-    const dataSource = data?.map((doctor) => ({
-        key: doctor._id,
-        ...doctor,
-    }));
+
+    const { Search } = Input;
+
+    const handleSearch = (value) => {
+        setSearchQuery(value);
+    };
+
+    const handleChange = (pagination, filters) => {
+        setFilteredInfo(filters);
+    };
+
+    const clearFilters = () => {
+        setFilteredInfo({});
+    };
+
+    const dataSource = doctors
+        ?.filter((user) => user.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        .map((user) => ({
+            ...user,
+            key: user._id,
+        }));
 
     return (
-        <Card title="Doctors">
+        <Card
+            title="Doctors"
+            extra={
+                <Space>
+                    <Search
+                        onSearch={handleSearch}
+                        allowClear
+                        enterButton
+                        placeholder="Search by name"
+                    />
+                    <Button icon={<DeleteOutlined />} onClick={clearFilters}>
+                        Clear filters
+                    </Button>
+                </Space>
+            }
+        >
             <Table
+                loading={isGetAllDoctorsLoading}
                 bordered
                 columns={columns}
                 dataSource={dataSource}
                 scroll={{
-                    x: 2000,
+                    x: 2200,
                     y: 300,
                 }}
+                onChange={handleChange}
             />
         </Card>
     );

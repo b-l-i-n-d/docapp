@@ -21,14 +21,14 @@ const refresh = {
     options: {
         sameSite: 'none',
         domain: 'localhost',
-        httpOnly: false,
+        httpOnly: true,
         secure: true,
         maxAge: process.env.REFRESH_EXP,
     },
     delete: {
         sameSite: 'none',
         domain: 'localhost',
-        httpOnly: false,
+        httpOnly: true,
         secure: true,
         maxAge: new Date(null),
     },

@@ -1,23 +1,17 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { cookieExtractor } from '../../helpers/index';
 import { setUser } from '../features/users/userSlice';
+import { apiSlice } from './apiSlice';
+import { userAPI } from './userAPI';
 
-export const doctorAPI = createApi({
-    reducerPath: 'doctorApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5000/api/v1/doctors/',
-    }),
-    tagTypes: ['Doctor'],
+export const doctorAPI = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         addDoctor: builder.mutation({
-            query(data) {
-                return {
-                    url: 'add',
-                    method: 'POST',
-                    credentials: 'include',
-                    body: data,
-                };
-            },
+            query: (data) => ({
+                url: '/doctors',
+                method: 'POST',
+                credentials: 'include',
+                body: data,
+            }),
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
@@ -27,15 +21,59 @@ export const doctorAPI = createApi({
                     console.log(error);
                 }
             },
+            invalidatesTags: ['Doctors'],
         }),
-        getDoctor: builder.query({
-            query() {
-                return {
-                    url: 'get',
-                    method: 'GET',
-                    credentials: 'include',
-                };
+
+        editDoctor: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/doctors/${id}`,
+                method: 'PATCH',
+                credentials: 'include',
+                body: { data },
+            }),
+            async onQueryStarted(args, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    return await data;
+                } catch (error) {
+                    console.log(error);
+                    return error;
+                }
             },
+            invalidatesTags: ['Doctors'],
+            onCacheEntryAdded: (args, { dispatch }) => {
+                dispatch(userAPI.util.invalidateTags(['Users']));
+            },
+        }),
+
+        updateStatus: builder.mutation({
+            query: ({ id, status }) => ({
+                url: `/doctors/${id}/update-status`,
+                method: 'PATCH',
+                credentials: 'include',
+                body: { status },
+            }),
+            async onQueryStarted(args, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    return await data;
+                } catch (error) {
+                    console.log(error);
+                    return error;
+                }
+            },
+            invalidatesTags: ['Doctors'],
+            onCacheEntryAdded: (args, { dispatch }) => {
+                dispatch(userAPI.util.invalidateTags(['Users']));
+            },
+        }),
+
+        getMyDoctorInfo: builder.query({
+            query: () => ({
+                url: '/doctors/me',
+                method: 'GET',
+                credentials: 'include',
+            }),
 
             async onQueryStarted(args, { queryFulfilled }) {
                 try {
@@ -47,19 +85,54 @@ export const doctorAPI = createApi({
                 }
             },
         }),
-        getAllDoctors: builder.query({
-            query() {
-                return {
-                    url: 'get-all',
-                    method: 'GET',
-                    credentials: 'include',
-                };
-            },
+
+        getDoctorById: builder.query({
+            query: (id) => ({
+                url: `/doctors/${id}`,
+                method: 'GET',
+                credentials: 'include',
+            }),
 
             async onQueryStarted(args, { queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    console.log('🚀 ~ file: doctorAPI.js:62 ~ onQueryStarted ~ data:', data);
+                    return await data;
+                } catch (error) {
+                    console.log(error);
+                    return error;
+                }
+            },
+        }),
+
+        getAllDoctors: builder.query({
+            query: () => ({
+                url: '/doctors',
+                method: 'GET',
+                credentials: 'include',
+            }),
+
+            async onQueryStarted(args, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    return await data;
+                } catch (error) {
+                    console.log(error);
+                    return error;
+                }
+            },
+            providesTags: ['Doctors'],
+        }),
+
+        getApprovedDoctors: builder.query({
+            query: () => ({
+                url: '/doctors/approved',
+                method: 'GET',
+                credentials: 'include',
+            }),
+
+            async onQueryStarted(args, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
                     return await data;
                 } catch (error) {
                     console.log(error);
@@ -70,5 +143,13 @@ export const doctorAPI = createApi({
     }),
 });
 
-export const { useAddDoctorMutation, useGetDoctorQuery, useGetAllDoctorsQuery, usePrefetch } =
-    doctorAPI;
+export const {
+    useAddDoctorMutation,
+    useEditDoctorMutation,
+    useUpdateStatusMutation,
+    useGetMyDoctorInfoQuery,
+    useGetDoctorByIdQuery,
+    useGetAllDoctorsQuery,
+    useGetApprovedDoctorsQuery,
+    usePrefetch,
+} = doctorAPI;

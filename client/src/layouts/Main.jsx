@@ -23,7 +23,9 @@ function Main() {
     const [logOutUser, { isLoading: isLogOutLoading, error: logOutError }] =
         useLazyLogoutUserQuery();
 
-    const { isLoading, error } = useGetNotificationQuery();
+    const { isLoading, error } = useGetNotificationQuery(undefined, {
+        pollingInterval: 10000,
+    });
 
     useEffect(() => {
         if (logOutError) {

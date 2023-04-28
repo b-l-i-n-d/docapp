@@ -1,20 +1,27 @@
 import mongoose from 'mongoose';
 
-const chamberSchema = new mongoose.Schema({
+const daysSchema = new mongoose.Schema({
+    day: {
+        type: String,
+        required: true,
+    },
     time: {
         type: Array,
         required: true,
     },
-    activeDay: {
-        type: Array,
-        required: true,
-    },
+});
+
+const chamberSchema = new mongoose.Schema({
     fees: {
         type: Number,
         required: true,
     },
     location: {
         type: String,
+        required: true,
+    },
+    days: {
+        type: [daysSchema],
         required: true,
     },
 });
@@ -95,7 +102,7 @@ const doctorSchema = new mongoose.Schema(
             type: String,
             required: true,
             default: 'pending',
-            enum: ['decilend', 'pending', 'approved'],
+            enum: ['rejected', 'pending', 'approved'],
         },
     },
     {

@@ -173,6 +173,15 @@ const deleteNotification = async (req, res) => {
     }
 };
 
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find({}).select('name email role isDoctor').lean();
+        return res.status(200).json(users);
+    } catch (error) {
+        return res.status(500).json({ error: 'Something went wrong.' });
+    }
+};
+
 export default {
     login,
     logout,
@@ -181,4 +190,5 @@ export default {
     getNotifications,
     updateNotifications,
     deleteNotification,
+    getAllUsers,
 };

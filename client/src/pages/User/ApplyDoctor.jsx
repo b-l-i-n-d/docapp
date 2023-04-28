@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
     Button,
     Card,
@@ -7,11 +8,12 @@ import {
     Divider,
     Form,
     Input,
-    notification,
     Row,
     Select,
+    Space,
     TimePicker,
     Upload,
+    notification,
 } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
@@ -23,7 +25,7 @@ import Districts from '../../assets/data/districtsData.json';
 import Hospitals from '../../assets/data/hospitalData.json';
 import { Doctor } from '../../components';
 import { getBase64 } from '../../helpers';
-import { useAddDoctorMutation, useGetDoctorQuery } from '../../redux/api/doctorAPI';
+import { useAddDoctorMutation, useGetMyDoctorInfoQuery } from '../../redux/api/doctorAPI';
 
 const { Option } = Select;
 
@@ -33,10 +35,13 @@ function ApplyDoctor() {
     const doctorType = Form.useWatch('doctorType', form);
     const [addDoctor, { isLoading, data, error }] = useAddDoctorMutation();
     const [imageUrl, setImageUrl] = useState();
-    const { data: doctorData } = useGetDoctorQuery(undefined, {
-        skip: user.isDoctor === 'no',
-    });
-    console.log('🚀 ~ file: ApplyDoctor.jsx:35 ~ ApplyDoctor ~ doctorData:', doctorData);
+    const { data: doctorData, isLoading: isGetDoctorDataLoading } = useGetMyDoctorInfoQuery(
+        undefined,
+        {
+            skip: user.isDoctor === 'no',
+        }
+    );
+    const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     const handleChange = (info) => {
         getBase64(info.file.originFileObj, (url) => {
@@ -95,9 +100,15 @@ function ApplyDoctor() {
         </Option>
     ));
 
+    const weekDaysElements = weekDays.map((day) => (
+        <Option key={day} value={day}>
+            {day}
+        </Option>
+    ));
+
     return (
-        <Card title="Doctor registration" className="bg-base-100">
-            {user.isDoctor === 'pending' ? (
+        <Card loading={isLoading || isGetDoctorDataLoading} title="Doctor registration">
+            {user.isDoctor === 'pending' || user.isDoctor !== 'no' ? (
                 <Doctor.DoctorInfo doctorData={doctorData} />
             ) : (
                 <Form layout="vertical" form={form} onFinish={onFinish}>
@@ -449,53 +460,116 @@ function ApplyDoctor() {
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col span={24} md={12}>
-                                    <Form.Item
-                                        required
-                                        label={
-                                            <label className="text-base-content">Active day</label>
-                                        }
-                                        name={['chamber', 'activeDay']}
+
+                                <Col span={24}>
+                                    <Form.List
+                                        name={['chamber', 'days']}
+                                        initialValue={[
+                                            {
+                                                day: null,
+                                                time: [],
+                                            },
+                                        ]}
                                         rules={[
                                             {
-                                                required: true,
-                                                message: 'Please select active day.',
+                                                // eslint-disable-next-line consistent-return
+                                                validator: async (_, fields) => {
+                                                    if (!fields || fields.length < 1) {
+                                                        return Promise.reject(
+                                                            new Error(
+                                                                'At least one chamber day is required.'
+                                                            )
+                                                        );
+                                                    }
+                                                },
                                             },
                                         ]}
                                     >
-                                        <Select
-                                            mode="multiple"
-                                            allowClear
-                                            placeholder="Please select date"
-                                        >
-                                            <Option value="Friday">Friday</Option>
-                                            <Option value="Saturday">Saturday</Option>
-                                            <Option value="Sunday">Sunday</Option>
-                                            <Option value="Monday">Monday</Option>
-                                            <Option value="Tuesday">Tuesday</Option>
-                                            <Option value="Wednesday">Wednesday</Option>
-                                            <Option value="Thusday">Thusday</Option>
-                                        </Select>
-                                    </Form.Item>
-                                </Col>
-                                <Col span={24} md={12}>
-                                    <Form.Item
-                                        required
-                                        label={<label className="text-base-content">Time</label>}
-                                        name={['chamber', 'time']}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Please select time.',
-                                            },
-                                        ]}
-                                    >
-                                        <TimePicker.RangePicker
-                                            minuteStep={15}
-                                            use12Hours
-                                            format="h:mm a"
-                                        />
-                                    </Form.Item>
+                                        {(fields, { add, remove }, { errors }) => (
+                                            <>
+                                                {fields.map(({ key, name, ...restField }) => (
+                                                    <Row gutter={(0, 16)} key={key} align="top">
+                                                        <Col span={24} md={12}>
+                                                            <Form.Item
+                                                                // eslint-disable-next-line react/jsx-props-no-spreading
+                                                                {...restField}
+                                                                label={
+                                                                    <label className="text-base-content">
+                                                                        Active day
+                                                                    </label>
+                                                                }
+                                                                name={[name, 'day']}
+                                                                required
+                                                                rules={[
+                                                                    {
+                                                                        required: true,
+                                                                        message:
+                                                                            'Please select active day.',
+                                                                    },
+                                                                ]}
+                                                            >
+                                                                <Select
+                                                                    allowClear
+                                                                    placeholder="Please select active day."
+                                                                >
+                                                                    {weekDaysElements}
+                                                                </Select>
+                                                            </Form.Item>
+                                                        </Col>
+                                                        <Col span={24} md={12}>
+                                                            <Space
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    marginBottom: 8,
+                                                                }}
+                                                                align="center"
+                                                            >
+                                                                <Form.Item
+                                                                    // eslint-disable-next-line react/jsx-props-no-spreading
+                                                                    {...restField}
+                                                                    label={
+                                                                        <label className="text-base-content">
+                                                                            Time
+                                                                        </label>
+                                                                    }
+                                                                    name={[name, 'time']}
+                                                                    required
+                                                                    rules={[
+                                                                        {
+                                                                            required: true,
+                                                                            message:
+                                                                                'Please select time.',
+                                                                        },
+                                                                    ]}
+                                                                >
+                                                                    <TimePicker.RangePicker
+                                                                        minuteStep={15}
+                                                                        use12Hours
+                                                                        format="h:mm a"
+                                                                    />
+                                                                </Form.Item>
+                                                                <MinusCircleOutlined
+                                                                    onClick={() => remove(name)}
+                                                                />
+                                                            </Space>
+                                                        </Col>
+                                                    </Row>
+                                                ))}
+                                                <Form.Item>
+                                                    <Button
+                                                        onClick={() => add()}
+                                                        icon={<PlusOutlined />}
+                                                    >
+                                                        Add Chamber Time Slot
+                                                    </Button>
+                                                </Form.Item>
+                                                <Form.ErrorList
+                                                    className="text-red-500"
+                                                    errors={errors}
+                                                />
+                                            </>
+                                        )}
+                                    </Form.List>
                                 </Col>
                             </Row>
                         </Card>
@@ -529,12 +603,7 @@ function ApplyDoctor() {
                     </Row>
 
                     <Form.Item className="form-control">
-                        <Button
-                            loading={isLoading}
-                            type="primary"
-                            // className="btn w-full btn-primary hover:text-base-100 focus:btn-primary ring-primary focus:ring-1 ring-offset-2 mt-4"
-                            htmlType="submit"
-                        >
+                        <Button loading={isLoading} type="primary" htmlType="submit">
                             Submit
                         </Button>
                     </Form.Item>

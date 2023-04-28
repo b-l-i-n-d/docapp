@@ -1,19 +1,14 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { setNotification } from '../features/users/userSlice';
+import { apiSlice } from './apiSlice';
 
-export const userAPI = createApi({
-    reducerPath: 'userApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api/v1/users/' }),
-    tagTypes: ['User'],
+export const userAPI = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getNotification: builder.query({
-            query() {
-                return {
-                    url: 'notifications',
-                    method: 'GET',
-                    credentials: 'include',
-                };
-            },
+            query: () => ({
+                url: '/users/notifications',
+                method: 'GET',
+                credentials: 'include',
+            }),
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
@@ -24,16 +19,13 @@ export const userAPI = createApi({
                     console.log(error);
                 }
             },
-            providesTags: ['User'],
         }),
         updateNotification: builder.mutation({
-            query(id) {
-                return {
-                    url: `notifications/${id}`,
-                    method: 'PATCH',
-                    credentials: 'include',
-                };
-            },
+            query: (id) => ({
+                url: `/users/notifications/${id}`,
+                method: 'PATCH',
+                credentials: 'include',
+            }),
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
@@ -46,13 +38,11 @@ export const userAPI = createApi({
             },
         }),
         deleteNotification: builder.mutation({
-            query(id) {
-                return {
-                    url: `notifications/${id}`,
-                    method: 'DELETE',
-                    credentials: 'include',
-                };
-            },
+            query: (id) => ({
+                url: `/users/notifications/${id}`,
+                method: 'DELETE',
+                credentials: 'include',
+            }),
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
@@ -64,6 +54,25 @@ export const userAPI = createApi({
                 }
             },
         }),
+        getAllUsers: builder.query({
+            query: () => ({
+                url: '/users/allUsers',
+                method: 'GET',
+                credentials: 'include',
+            }),
+
+            async onQueryStarted(args, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data) {
+                        dispatch(setNotification(data));
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+            providesTags: ['Users'],
+        }),
     }),
 });
 
@@ -71,5 +80,6 @@ export const {
     useGetNotificationQuery,
     useUpdateNotificationMutation,
     useDeleteNotificationMutation,
+    useGetAllUsersQuery,
     usePrefetch,
 } = userAPI;

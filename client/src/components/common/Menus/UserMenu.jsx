@@ -1,50 +1,47 @@
 import { Menu } from 'antd';
 import React from 'react';
-import { AiOutlineHome, AiOutlineProfile, AiOutlineUnorderedList } from 'react-icons/ai';
+import {
+    AiOutlineAppstoreAdd,
+    AiOutlineHome,
+    AiOutlineProfile,
+    AiOutlineUnorderedList,
+} from 'react-icons/ai';
 import { FaStethoscope } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 function UserMenu() {
-    const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const path = pathname.split('/').slice(0, 2).join('/');
+
     const userMenuItems = [
         {
-            label: 'Home',
-            key: 'home',
+            label: <NavLink to="/">Home</NavLink>,
+            key: '/',
             icon: <AiOutlineHome size={16} />,
-            onClick: () => navigate('/', { replace: true }),
         },
         {
-            label: 'Apply for Doctor',
-            key: 'applyForDoctor',
+            label: <NavLink to="/apply">Apply For Doctor</NavLink>,
+            key: '/apply',
             icon: <FaStethoscope size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
-            onClick: () => navigate('/apply', { replace: true }),
         },
         {
-            label: 'Appionments',
-            key: 'appionments',
+            label: <NavLink to="/book-appionments">Book Appionments</NavLink>,
+            key: '/book-appionments',
+            icon: <AiOutlineAppstoreAdd size={16} />,
+        },
+        {
+            label: <NavLink to="/appointments">Appointments</NavLink>,
+            key: '/appointments',
             icon: <AiOutlineUnorderedList size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
         },
         {
             label: 'Profile',
             key: 'profile',
             icon: <AiOutlineProfile size={16} />,
-            // className:
-            //     'bg-base-100 text-base-content hover:bg-primary hover:text-primary-content focus:bg-primary focus:text-primary-contsnt',
         },
     ];
 
-    return (
-        <Menu
-            mode="inline"
-            defaultSelectedKeys={['home']}
-            className="bg-base-100"
-            items={userMenuItems}
-        />
-    );
+    return <Menu mode="inline" selectedKeys={[path]} items={userMenuItems} />;
 }
 
 export default UserMenu;

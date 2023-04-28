@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -10,12 +9,8 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         logout: () => initialState,
-        setUser: (state, action) => {
-            state.user = action.payload;
-        },
-        setNotification: (state, action) => {
-            state.notification = action.payload;
-        },
+        setUser: (state, action) => ({ ...state, user: action.payload }),
+        setNotification: (state, action) => ({ ...state, notification: action.payload }),
     },
 });
 export const { logout, setUser, setNotification } = userSlice.actions;

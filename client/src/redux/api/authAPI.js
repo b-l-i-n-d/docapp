@@ -1,18 +1,15 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { cookieDestroyer, cookieExtractor } from '../../helpers/index';
 import { logout, setUser } from '../features/users/userSlice';
+import { apiSlice } from './apiSlice';
 import { doctorAPI } from './doctorAPI';
 import { userAPI } from './userAPI';
 
-export const authAPI = createApi({
-    reducerPath: 'authApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api/v1/users/' }),
-    tagTypes: ['Auth'],
+export const authAPI = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         loginUser: builder.mutation({
             query(data) {
                 return {
-                    url: 'login',
+                    url: '/users/login',
                     method: 'POST',
                     credentials: 'include',
                     body: data,
@@ -31,7 +28,7 @@ export const authAPI = createApi({
         signupUser: builder.mutation({
             query(data) {
                 return {
-                    url: 'signup',
+                    url: '/users/signup',
                     method: 'POST',
                     credentials: 'include',
                     body: data,
@@ -50,7 +47,7 @@ export const authAPI = createApi({
         logoutUser: builder.query({
             query() {
                 return {
-                    url: 'logout',
+                    url: '/users/logout',
                     method: 'GET',
                     credentials: 'include',
                 };
@@ -72,7 +69,7 @@ export const authAPI = createApi({
         verifyToken: builder.query({
             query() {
                 return {
-                    url: 'verifyToken',
+                    url: '/users/verifyToken',
                     method: 'GET',
                     credentials: 'include',
                 };

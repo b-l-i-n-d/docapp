@@ -7,27 +7,26 @@ import {
     AiOutlineUser,
 } from 'react-icons/ai';
 import { FaStethoscope } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 function AdminMenu() {
-    const navigate = useNavigate();
+    const { pathname } = useLocation();
+
     const adminMenuItems = [
         {
-            label: 'Dashboard',
-            key: 'dashboard',
+            label: <NavLink to="/">Dashboard</NavLink>,
+            key: '/',
             icon: <AiOutlineDashboard size={16} />,
-            onClick: () => navigate('/', { replace: true }),
         },
         {
-            label: 'Users',
-            key: 'users',
+            label: <NavLink to="/users">Users</NavLink>,
+            key: '/users',
             icon: <AiOutlineUser size={16} />,
         },
         {
-            label: 'Doctors',
-            key: 'doctors',
+            label: <NavLink to="/doctors">Doctors</NavLink>,
+            key: '/doctors',
             icon: <FaStethoscope size={16} />,
-            onClick: () => navigate('/doctors', { replace: true }),
         },
         {
             label: 'Departments',
@@ -43,7 +42,7 @@ function AdminMenu() {
     return (
         <Menu
             mode="inline"
-            defaultSelectedKeys={['dashboard']}
+            selectedKeys={[pathname]}
             className="bg-base-100"
             items={adminMenuItems}
         />
