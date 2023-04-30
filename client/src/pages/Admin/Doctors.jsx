@@ -160,8 +160,8 @@ function Doctors() {
                 showTitle: false,
             },
             render: (presentAddress) => (
-                <Tooltip placement="topLeft" title={presentAddress}>
-                    {presentAddress}
+                <Tooltip placement="topLeft" title={presentAddress.name}>
+                    {presentAddress.name}
                 </Tooltip>
             ),
         },

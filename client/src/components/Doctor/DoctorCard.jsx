@@ -26,6 +26,7 @@ function DoctorCard({ isLoading, doctor }) {
                     alt="doctorImage"
                 />
             </Card.Grid>
+
             <Card.Grid hoverable={false} style={{ width: '30%' }}>
                 <Text strong>{title}</Text>
                 <Title
@@ -41,6 +42,7 @@ function DoctorCard({ isLoading, doctor }) {
                     {specialized}
                 </Paragraph>
             </Card.Grid>
+
             <Card.Grid hoverable={false} style={{ width: '35%' }}>
                 <Text>Workplace</Text>
                 <Paragraph strong>{workplace}</Paragraph>
@@ -50,6 +52,7 @@ function DoctorCard({ isLoading, doctor }) {
                     {department.name}
                 </Paragraph>
             </Card.Grid>
+
             <Card.Grid hoverable={false} style={{ width: '20%' }}>
                 <Text strong>Fee Pre Consultation</Text>
                 <Title

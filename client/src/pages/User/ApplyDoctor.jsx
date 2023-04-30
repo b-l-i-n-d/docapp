@@ -20,11 +20,11 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { TbCurrencyTaka } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
-import Districts from '../../assets/data/districtsData.json';
 import Hospitals from '../../assets/data/hospitalData.json';
 import { Doctor } from '../../components';
 import { getBase64 } from '../../helpers';
 import { useGetDepartmentsQuery } from '../../redux/api/departmentAPI';
+import { useGetDistictsQuery } from '../../redux/api/districtAPI';
 import { useAddDoctorMutation, useGetMyDoctorInfoQuery } from '../../redux/api/doctorAPI';
 
 const { Option } = Select;
@@ -47,6 +47,9 @@ function ApplyDoctor() {
             skip: user.isDoctor !== 'no',
         }
     );
+    const { data: districts, isLoading: isDiscrictsLoading } = useGetDistictsQuery(undefined, {
+        skip: user.isDoctor !== 'no',
+    });
 
     const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -67,11 +70,13 @@ function ApplyDoctor() {
         addDoctor(formData);
     };
 
-    const districtElements = Districts.map((district) => (
-        <Option key={district.id} value={district.name}>
-            {district.name}
-        </Option>
-    ));
+    const districtElements =
+        !isDiscrictsLoading &&
+        districts?.map((district) => (
+            <Option key={district._id} value={district._id}>
+                {district.name}
+            </Option>
+        ));
 
     const departmentElements =
         !isDepartmentsLoading &&
@@ -322,7 +327,15 @@ function ApplyDoctor() {
                                         },
                                     ]}
                                 >
-                                    <Select showSearch placeholder="Select district">
+                                    <Select
+                                        showSearch
+                                        placeholder="Select district"
+                                        filterOption={(input, option) =>
+                                            option.children
+                                                .toLowerCase()
+                                                .indexOf(input.toLowerCase()) >= 0
+                                        }
+                                    >
                                         {districtElements}
                                     </Select>
                                 </Form.Item>

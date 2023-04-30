@@ -55,7 +55,8 @@ const doctorSchema = new mongoose.Schema(
             enum: ['Male', 'Female', 'Other'],
         },
         presentAddress: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'District',
             required: true,
         },
         doctorType: {

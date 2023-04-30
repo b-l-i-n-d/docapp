@@ -7,6 +7,7 @@ import express from 'express';
 import morgan from 'morgan';
 import appointmentRoutes from './components/appointments/appointments.routes.js';
 import departmentRoutes from './components/departments/departments.routes.js';
+import districtsRoutes from './components/districts/districts.routes.js';
 import doctorRoutes from './components/doctors/doctors.routes.js';
 import userRoutes from './components/users/users.routes.js';
 import { urlConfig } from './configs/index.js';
@@ -84,6 +85,7 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/doctors', doctorRoutes);
 app.use('/api/v1/appointments', appointmentRoutes);
 app.use('/api/v1/departments', departmentRoutes);
+app.use('/api/v1/districts', districtsRoutes);
 
 // show 404 if URL not found
 app.use((req, res) => {

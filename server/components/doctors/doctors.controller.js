@@ -269,7 +269,10 @@ const getDoctor = async (req, res) => {
 
 const getAllDoctors = async (req, res) => {
     try {
-        const result = await Doctor.find({}).populate('department', 'name').lean();
+        const result = await Doctor.find({})
+            .populate('department', 'name')
+            .populate('presentAddress', 'name')
+            .lean();
 
         return res.status(200).json(result);
     } catch (error) {
