@@ -1,5 +1,5 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Calendar, Col, Form, Input, message, Modal, Row, Select, Space } from 'antd';
+import { Button, Calendar, Col, Form, Input, Modal, notification, Row, Select, Space } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -38,10 +38,19 @@ function AppointmentModal({ button, chamberDays }) {
 
     useEffect(() => {
         if (appointment && !isAddAppointmentLoading) {
-            message.success('Appointment booked successfully');
+            notification.success({
+                placement: 'bottomRight',
+                duration: 3,
+                message: 'Appointment Booked Successfully',
+            });
         }
         if (addAppointmentError) {
-            message.error(addAppointmentError.message);
+            notification.error({
+                placement: 'bottomRight',
+                duration: 3,
+                message: 'Appointment Booking Failed',
+                description: addAppointmentError.message,
+            });
         }
         if (!isAddAppointmentLoading) {
             setOpen(false);

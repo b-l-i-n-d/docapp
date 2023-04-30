@@ -36,6 +36,9 @@ function App() {
                             <Route path="doctors">
                                 <Route index element={<Admin.Doctors />} />
                             </Route>
+                            <Route path="departments">
+                                <Route index element={<Admin.Departments />} />
+                            </Route>
                         </Route>
                         <Route
                             path="*"

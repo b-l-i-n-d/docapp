@@ -20,11 +20,11 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { TbCurrencyTaka } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
-import Departmnet from '../../assets/data/departmentData.json';
 import Districts from '../../assets/data/districtsData.json';
 import Hospitals from '../../assets/data/hospitalData.json';
 import { Doctor } from '../../components';
 import { getBase64 } from '../../helpers';
+import { useGetDepartmentsQuery } from '../../redux/api/departmentAPI';
 import { useAddDoctorMutation, useGetMyDoctorInfoQuery } from '../../redux/api/doctorAPI';
 
 const { Option } = Select;
@@ -33,14 +33,21 @@ function ApplyDoctor() {
     const user = useSelector((store) => store.userState.user);
     const [form] = Form.useForm();
     const doctorType = Form.useWatch('doctorType', form);
-    const [addDoctor, { isLoading, data, error }] = useAddDoctorMutation();
     const [imageUrl, setImageUrl] = useState();
+    const [addDoctor, { data: addedDoctor, isLoading, error }] = useAddDoctorMutation();
     const { data: doctorData, isLoading: isGetDoctorDataLoading } = useGetMyDoctorInfoQuery(
         undefined,
         {
             skip: user.isDoctor === 'no',
         }
     );
+    const { data: departments, isLoading: isDepartmentsLoading } = useGetDepartmentsQuery(
+        undefined,
+        {
+            skip: user.isDoctor !== 'no',
+        }
+    );
+
     const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     const handleChange = (info) => {
@@ -52,28 +59,6 @@ function ApplyDoctor() {
     useEffect(() => {
         form.setFieldsValue({ email: user.email });
     }, [form, user.email]);
-
-    useEffect(() => {
-        if (error) {
-            notification.open({
-                className:
-                    'bg-base-100 rounded-2xl text-base-content antdNotificationMessage antdNotificationClose shadow-lg shadow-primary/30',
-                type: 'error',
-                message: error.data ? error.data.error : 'Can not connect to server.',
-                description: error.data ? error.data.description : 'Please try again.',
-                placement: 'bottomRight',
-            });
-        }
-        if (data) {
-            notification.open({
-                className:
-                    'bg-base-100 rounded-2xl text-base-content antdNotificationMessage antdNotificationClose shadow-lg shadow-primary/30',
-                type: 'success',
-                message: "Suucessfully applied for doctor's account.",
-                placement: 'bottomRight',
-            });
-        }
-    }, [data, error, user]);
 
     const onFinish = (values) => {
         const formData = values;
@@ -88,11 +73,13 @@ function ApplyDoctor() {
         </Option>
     ));
 
-    const departmentElements = Departmnet.map((department) => (
-        <Option key={department.id} value={department.name}>
-            {department.name}
-        </Option>
-    ));
+    const departmentElements =
+        !isDepartmentsLoading &&
+        departments?.map((department) => (
+            <Option key={department._id} value={department._id}>
+                {department.name}
+            </Option>
+        ));
 
     const hospitalElements = Hospitals.map((hospital) => (
         <Option key={Math.random()} value={hospital.orgName}>
@@ -105,6 +92,22 @@ function ApplyDoctor() {
             {day}
         </Option>
     ));
+
+    useEffect(() => {
+        if (error) {
+            notification.error({
+                message: error.data ? error.data.error : 'Can not connect to server.',
+                description: error.data ? error.data.description : 'Please try again.',
+                placement: 'bottomRight',
+            });
+        }
+        if (addedDoctor && !isLoading) {
+            notification.success({
+                message: "Suucessfully applied for doctor's account.",
+                placement: 'bottomRight',
+            });
+        }
+    }, [addedDoctor, error, isLoading]);
 
     return (
         <Card loading={isLoading || isGetDoctorDataLoading} title="Doctor registration">
@@ -380,7 +383,15 @@ function ApplyDoctor() {
                                         },
                                     ]}
                                 >
-                                    <Select showSearch placeholder="Select your department">
+                                    <Select
+                                        showSearch
+                                        filterOption={(input, option) =>
+                                            option.children
+                                                .toLowerCase()
+                                                .indexOf(input.toLowerCase()) >= 0
+                                        }
+                                        placeholder="Select your department"
+                                    >
                                         {departmentElements}
                                     </Select>
                                 </Form.Item>

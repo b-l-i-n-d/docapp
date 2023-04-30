@@ -12,10 +12,15 @@ function Appointments() {
     const user = useSelector((state) => state.userState.user);
     const { data: appointmentsData, isLoading } = useGetUserAppointmentsQuery(currentPage);
     const { data: doctorAppointmentsData, isLoading: isDoctorAppointmentsLoading } =
-        useGetDoctorAppointmentsQuery({
-            id: user?.isDoctor,
-            page: currentPage,
-        });
+        useGetDoctorAppointmentsQuery(
+            {
+                id: user?.isDoctor,
+                page: currentPage,
+            },
+            {
+                skip: user?.isDoctor === 'pending' || user?.isDoctor === 'no',
+            }
+        );
 
     const { data: appointments, total } = appointmentsData || {};
     const { data: doctorAppointments, total: doctorsTotal } = doctorAppointmentsData || {};
@@ -165,8 +170,8 @@ function Appointments() {
 
     return (
         <Card title="Appointments" loading={isLoading}>
-            {user.isDoctor ? (
-                <Tabs defaultActiveKey="1" type="card" items={tabItems} />
+            {user.isDoctor !== 'pending' || user.isDoctor !== 'no' ? (
+                <Tabs defaultActiveKey="1" type="card" items={tabItems} size="large" />
             ) : (
                 <Table
                     loading={isLoading}

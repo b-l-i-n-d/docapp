@@ -8,6 +8,7 @@ import {
     notificationTypes,
 } from '../../configs/index.js';
 import { helpers } from '../../utils/index.js';
+import { departmentsModel } from '../departments/index.js';
 import { userModel } from '../users/index.js';
 import Doctor from './doctors.model.js';
 
@@ -38,7 +39,7 @@ const createDoctor = async (req, res) => {
     try {
         const imageResult = image && (await helpers.imageUpload(image, user._id));
 
-        const result = await Doctor.create({
+        const newDoctor = await Doctor.create({
             userId: user._id,
             title,
             name,
@@ -55,6 +56,12 @@ const createDoctor = async (req, res) => {
             workplace,
             chamber,
         });
+
+        if (newDoctor) {
+            await departmentsModel.findByIdAndUpdate(newDoctor.department, {
+                $push: { doctors: newDoctor._id },
+            });
+        }
 
         if (req.user.role === 'user') {
             const updatedUser = await userModel
@@ -83,11 +90,11 @@ const createDoctor = async (req, res) => {
             const { unSeenNotification } = admin;
             unSeenNotification.push({
                 type: notificationTypes.NEW_DOCTOR_REQUEST,
-                message: `${result.name} has requested for doctor account.`,
+                message: `${newDoctor.name} has requested for doctor account.`,
                 data: {
-                    doctorId: result._id,
+                    doctorId: newDoctor._id,
                     userId: user._id,
-                    name: result.name,
+                    name: newDoctor.name,
                 },
                 onClickPath: `/admin/doctors`,
                 createdAt: Date.now(),
@@ -105,7 +112,7 @@ const createDoctor = async (req, res) => {
             });
         }
 
-        return res.status(200).json(result);
+        return res.status(201).json(newDoctor);
     } catch (error) {
         await helpers.imageDelete(user._id);
         return res.status(500).json({
@@ -199,7 +206,7 @@ const updateDoctorStatus = async (req, res) => {
             createdAt: Date.now(),
         });
 
-        await userModel
+        const updatedUser = await userModel
             .findByIdAndUpdate(
                 user._id,
                 {
@@ -209,6 +216,23 @@ const updateDoctorStatus = async (req, res) => {
                 { new: true }
             )
             .lean();
+
+        const accessToken = jwt.sign(
+            {
+                _id: user._id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+                isDoctor: updatedUser.isDoctor,
+            },
+            jwtConfig.ACCESS_SECRET,
+            { expiresIn: jwtConfig.ACCESS_EXP }
+        );
+
+        res.cookie(cookiesConfig.access.name, accessToken, {
+            ...cookiesConfig.access.options,
+            overwrite: true,
+        });
 
         return res.status(200).json(updatedDoctor);
     } catch (error) {
@@ -232,8 +256,8 @@ const getDoctor = async (req, res) => {
         }
 
         const result = doctorId
-            ? await Doctor.findById(doctorId).lean()
-            : await Doctor.findOne({ userId }).lean();
+            ? await Doctor.findById(doctorId).populate('department', 'name').lean()
+            : await Doctor.findOne({ userId }).populate('department', 'name').lean();
 
         return res.status(200).json(result);
     } catch (error) {
@@ -245,7 +269,7 @@ const getDoctor = async (req, res) => {
 
 const getAllDoctors = async (req, res) => {
     try {
-        const result = await Doctor.find({}).lean();
+        const result = await Doctor.find({}).populate('department', 'name').lean();
 
         return res.status(200).json(result);
     } catch (error) {
@@ -258,6 +282,7 @@ const getAllDoctors = async (req, res) => {
 const getApprovedDoctors = async (req, res) => {
     try {
         const result = await Doctor.find({ status: 'approved' })
+            .populate('department', 'name')
             .select(
                 '_id name title image doctorType bmdcRegNo department specialized workplace chamber'
             )

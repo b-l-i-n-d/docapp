@@ -101,7 +101,7 @@ function DoctorDetails() {
                         </Space>
                         <br />
                         <Space size="small" direction="vertical" className="mt-5">
-                            <Text strong>Department: {doctor?.department}</Text>
+                            <Text strong>Department: {doctor?.department.name}</Text>
                             <Text strong>
                                 Gender: {doctor?.gender} {'   '}
                                 {doctor?.gender === 'Male' ? (

@@ -20,13 +20,14 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
-import departmnetData from '../../assets/data/departmentData.json';
 import { useGetAllDoctorsQuery, useUpdateStatusMutation } from '../../redux/api/doctorAPI';
+import { useGetDepartmentsQuery } from '../../redux/api/departmentAPI';
 
 function Doctors() {
     const { data: doctors, isLoading: isGetAllDoctorsLoading } = useGetAllDoctorsQuery();
     const [updateDoctorStatus, { isLoading: isUpdateStatusLoading, data: updatedDoctor }] =
         useUpdateStatusMutation();
+    const { data: departments } = useGetDepartmentsQuery();
 
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredInfo, setFilteredInfo] = useState({});
@@ -198,12 +199,12 @@ function Doctors() {
                 showTitle: false,
             },
             render: (department) => (
-                <Tooltip placement="topLeft" title={department}>
-                    {department}
+                <Tooltip placement="topLeft" title={department.name}>
+                    {department.name}
                 </Tooltip>
             ),
             filteredValue: filteredInfo.department || null,
-            filters: departmnetData.map((department) => ({
+            filters: departments?.map((department) => ({
                 text: department.name,
                 value: department.name,
             })),
@@ -469,6 +470,7 @@ function Doctors() {
                 bordered
                 columns={columns}
                 dataSource={dataSource}
+                rowKey={(record) => record._id}
                 scroll={{
                     x: 2200,
                     y: 300,

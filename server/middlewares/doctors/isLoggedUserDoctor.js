@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { doctorsModel } from '../../components/doctors/index.js';
 
 const isLoggedUserDoctor = async (req, res, next) => {
@@ -5,6 +6,12 @@ const isLoggedUserDoctor = async (req, res, next) => {
     const { doctorId } = req.query;
 
     if (doctorId) {
+        if (!mongoose.Types.ObjectId.isValid(doctorId)) {
+            return res.status(400).json({
+                error: 'Invalid doctor id',
+            });
+        }
+
         const isDoctor = await doctorsModel.findById(doctorId);
 
         if (isDoctor.userId.toString() !== userId) {

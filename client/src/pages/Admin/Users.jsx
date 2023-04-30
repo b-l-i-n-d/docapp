@@ -98,13 +98,13 @@ function Users() {
                         );
                     case 'no':
                         return (
-                            <Tag icon={<CheckCircleOutlined />} color="error">
+                            <Tag icon={<CloseCircleOutlined />} color="error">
                                 {isDoctor.toUpperCase()}
                             </Tag>
                         );
                     default:
                         return (
-                            <Tag icon={<CloseCircleOutlined />} color="success">
+                            <Tag icon={<CheckCircleOutlined />} color="success">
                                 YES
                             </Tag>
                         );

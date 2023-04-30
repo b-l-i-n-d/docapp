@@ -29,13 +29,13 @@ function AdminMenu() {
             icon: <FaStethoscope size={16} />,
         },
         {
-            label: 'Departments',
-            key: 'departments',
+            label: <NavLink to="/departments">Departments</NavLink>,
+            key: '/departments',
             icon: <AiOutlineUnorderedList size={16} />,
         },
         {
             label: 'Profile',
-            key: 'profile',
+            key: '/profile',
             icon: <AiOutlineProfile size={16} />,
         },
     ];

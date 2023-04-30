@@ -76,7 +76,8 @@ const doctorSchema = new mongoose.Schema(
             unique: true,
         },
         department: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Department',
             required: true,
         },
         specialized: {

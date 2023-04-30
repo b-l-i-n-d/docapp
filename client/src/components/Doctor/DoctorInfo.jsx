@@ -30,7 +30,7 @@ function DoctorInfo({ doctorData }) {
                                     ),
                             },
                             {
-                                title: 'Done',
+                                title: 'Approved',
                                 description: 'Doctor account is approved',
                                 status: doctorData.status === 'approved' ? 'finish' : 'wait',
                                 icon: <AiOutlineFileDone />,
@@ -87,7 +87,7 @@ function DoctorInfo({ doctorData }) {
                         {doctorData.bmdcRegNo}
                     </Descriptions.Item>
                     <Descriptions.Item label="Departmnet">
-                        {doctorData.department}
+                        {doctorData.department.name}
                     </Descriptions.Item>
                     <Descriptions.Item label="Specialized in">
                         {doctorData.specialized}
