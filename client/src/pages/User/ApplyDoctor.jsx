@@ -11,21 +11,23 @@ import {
     Row,
     Select,
     Space,
+    Spin,
     TimePicker,
     Upload,
     notification,
 } from 'antd';
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import { debounce } from 'lodash';
+import React, { useEffect, useMemo, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { TbCurrencyTaka } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
-import Hospitals from '../../assets/data/hospitalData.json';
 import { Doctor } from '../../components';
 import { getBase64 } from '../../helpers';
 import { useGetDepartmentsQuery } from '../../redux/api/departmentAPI';
 import { useGetDistictsQuery } from '../../redux/api/districtAPI';
 import { useAddDoctorMutation, useGetMyDoctorInfoQuery } from '../../redux/api/doctorAPI';
+import { useLazyGetWorkplacesQuery } from '../../redux/api/workplaceAPI';
 
 const { Option } = Select;
 
@@ -50,6 +52,10 @@ function ApplyDoctor() {
     const { data: districts, isLoading: isDiscrictsLoading } = useGetDistictsQuery(undefined, {
         skip: user.isDoctor !== 'no',
     });
+    const [getWorkplaces, { data: workplacesData, isLoading: isWorkplacesDataLoading }] =
+        useLazyGetWorkplacesQuery(undefined, {
+            skip: user.isDoctor !== 'no',
+        });
 
     const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -58,10 +64,6 @@ function ApplyDoctor() {
             setImageUrl(url);
         });
     };
-
-    useEffect(() => {
-        form.setFieldsValue({ email: user.email });
-    }, [form, user.email]);
 
     const onFinish = (values) => {
         const formData = values;
@@ -86,17 +88,30 @@ function ApplyDoctor() {
             </Option>
         ));
 
-    const hospitalElements = Hospitals.map((hospital) => (
-        <Option key={Math.random()} value={hospital.orgName}>
-            {hospital.orgName}
-        </Option>
-    ));
+    const workplaceElements =
+        !isWorkplacesDataLoading &&
+        workplacesData?.map((workplace) => (
+            <Option key={workplace._id} value={workplace._id}>
+                {workplace.orgName}
+            </Option>
+        ));
 
     const weekDaysElements = weekDays.map((day) => (
         <Option key={day} value={day}>
             {day}
         </Option>
     ));
+
+    const debounceFetcher = useMemo(() => {
+        const loadOptions = (value) => {
+            getWorkplaces(value);
+        };
+        return debounce(loadOptions, 800);
+    }, [getWorkplaces]);
+
+    useEffect(() => {
+        form.setFieldsValue({ email: user.email });
+    }, [form, user.email]);
 
     useEffect(() => {
         if (error) {
@@ -113,6 +128,13 @@ function ApplyDoctor() {
             });
         }
     }, [addedDoctor, error, isLoading]);
+
+    useEffect(() => {
+        if (user.isDoctor === 'no') {
+            getWorkplaces();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <Card loading={isLoading || isGetDoctorDataLoading} title="Doctor registration">
@@ -328,6 +350,7 @@ function ApplyDoctor() {
                                     ]}
                                 >
                                     <Select
+                                        loading={isDiscrictsLoading}
                                         showSearch
                                         placeholder="Select district"
                                         filterOption={(input, option) =>
@@ -397,6 +420,7 @@ function ApplyDoctor() {
                                     ]}
                                 >
                                     <Select
+                                        loading={isDepartmentsLoading}
                                         showSearch
                                         filterOption={(input, option) =>
                                             option.children
@@ -436,8 +460,17 @@ function ApplyDoctor() {
                                         },
                                     ]}
                                 >
-                                    <Select showSearch placeholder="Select your work place.">
-                                        {hospitalElements}
+                                    <Select
+                                        loading={isWorkplacesDataLoading}
+                                        showSearch
+                                        placeholder="Type your workplace."
+                                        onSearch={debounceFetcher}
+                                        filterOption={false}
+                                        notFoundContent={
+                                            isWorkplacesDataLoading ? <Spin size="small" /> : null
+                                        }
+                                    >
+                                        {workplaceElements}
                                     </Select>
                                 </Form.Item>
                             </Col>

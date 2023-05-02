@@ -21,11 +21,12 @@ import { Appointment } from '../../components';
 import { getFutureDate } from '../../helpers';
 import { useGetDoctorByIdQuery } from '../../redux/api/doctorAPI';
 
+dayjs.extend(relativeTime);
+
 function DoctorDetails() {
     const { doctorId } = useParams();
     const { data: doctor, isLoading } = useGetDoctorByIdQuery(doctorId);
     const { Title, Text } = Typography;
-    dayjs.extend(relativeTime);
 
     const getChamberDays = (days) =>
         days?.map((day) => {
@@ -116,7 +117,7 @@ function DoctorDetails() {
                 <Col span={6}>
                     <Space direction="vertical" size="middle">
                         <Space align="center">
-                            <MdWorkOutline /> <Text strong>{doctor?.workplace}</Text>
+                            <MdWorkOutline /> <Text strong>{doctor?.workplace.orgName}</Text>
                         </Space>
                         <Space align="center">
                             <MdOutlineAppRegistration /> <Text strong>BMDC Reg No:</Text>

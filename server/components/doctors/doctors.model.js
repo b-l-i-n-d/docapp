@@ -86,7 +86,8 @@ const doctorSchema = new mongoose.Schema(
             required: true,
         },
         workplace: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Workplace',
             required: true,
         },
         email: {

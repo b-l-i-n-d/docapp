@@ -45,7 +45,7 @@ function DoctorCard({ isLoading, doctor }) {
 
             <Card.Grid hoverable={false} style={{ width: '35%' }}>
                 <Text>Workplace</Text>
-                <Paragraph strong>{workplace}</Paragraph>
+                <Paragraph strong>{workplace.orgName}</Paragraph>
 
                 <Text>Department</Text>
                 <Paragraph strong style={{ marginBottom: 0 }}>

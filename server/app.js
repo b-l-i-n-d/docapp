@@ -10,6 +10,7 @@ import departmentRoutes from './components/departments/departments.routes.js';
 import districtsRoutes from './components/districts/districts.routes.js';
 import doctorRoutes from './components/doctors/doctors.routes.js';
 import userRoutes from './components/users/users.routes.js';
+import workplacesRoutes from './components/workplaces/workplaces.routes.js';
 import { urlConfig } from './configs/index.js';
 
 const app = express();
@@ -86,6 +87,7 @@ app.use('/api/v1/doctors', doctorRoutes);
 app.use('/api/v1/appointments', appointmentRoutes);
 app.use('/api/v1/departments', departmentRoutes);
 app.use('/api/v1/districts', districtsRoutes);
+app.use('/api/v1/workplaces', workplacesRoutes);
 
 // show 404 if URL not found
 app.use((req, res) => {

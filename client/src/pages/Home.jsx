@@ -5,7 +5,7 @@ function Home() {
     const user = useSelector((store) => store.userState.user);
 
     return (
-        <div className="site-layout-background text-center mx-0 my-4">
+        <div className="text-center mx-0 my-4 text-primary">
             <p className="text-xl">{user.name}</p>
             {
                 // indicates very long content

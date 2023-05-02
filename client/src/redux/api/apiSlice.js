@@ -6,6 +6,15 @@ export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: import.meta.env.VITE_API_URL,
     }),
-    tagTypes: ['Departments', 'Doctors', 'Appointments', 'DoctorAppointment', 'Users', 'Auth'],
+    tagTypes: [
+        'Appointments',
+        'Auth',
+        'Departments',
+        'Districts',
+        'Doctors',
+        'DoctorAppointment',
+        'Users',
+        'Workplaces',
+    ],
     endpoints: () => ({}),
 });

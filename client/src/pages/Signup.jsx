@@ -21,10 +21,7 @@ function Signup() {
             navigate('/', { replace: true });
         }
         if (isError) {
-            notification.open({
-                className:
-                    'bg-base-100 rounded-2xl text-base-content antdNotificationMessage antdNotificationClose shadow-lg shadow-primary/30',
-                type: 'error',
+            notification.error({
                 message: error.data.error,
                 description: error.data.description,
                 placement: 'bottomRight',

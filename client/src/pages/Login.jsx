@@ -23,10 +23,7 @@ function Login() {
         }
 
         if (error) {
-            notification.open({
-                className:
-                    'bg-base-100 rounded-2xl text-base-content antdNotificationMessage antdNotificationClose shadow-lg shadow-primary/30',
-                type: 'error',
+            notification.error({
                 message: error.data ? error.data.error : 'Can not connect to server.',
                 description: error.data ? error.data.description : 'Please try again.',
                 placement: 'bottomRight',

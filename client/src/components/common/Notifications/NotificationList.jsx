@@ -10,6 +10,8 @@ import {
     useUpdateNotificationMutation,
 } from '../../../redux/api/userAPI';
 
+dayjs.extend(relativeTime);
+
 function NotificationList({ data, type }) {
     const icons = { ndr: FaStethoscope, default: AiOutlineNotification };
     const bgColor = {
@@ -18,7 +20,14 @@ function NotificationList({ data, type }) {
     };
     const [updateNotification, { isLoading }] = useUpdateNotificationMutation();
     const [deleteNotification, { isLoading: isDeleteLoading }] = useDeleteNotificationMutation();
-    dayjs.extend(relativeTime);
+
+    const handleUpdateNotification = (id) => {
+        updateNotification(id);
+    };
+
+    const handleDeleteNotification = (id) => {
+        deleteNotification(id);
+    };
 
     return (
         <List
@@ -36,7 +45,7 @@ function NotificationList({ data, type }) {
                                 <Button
                                     danger
                                     icon={<DeleteOutlined />}
-                                    onClick={() => deleteNotification(item._id)}
+                                    onClick={() => handleDeleteNotification(item._id)}
                                 />,
                             ]
                         }
@@ -49,10 +58,12 @@ function NotificationList({ data, type }) {
                             }
                             title={
                                 type === 'seen' ? (
-                                    <span>{item.message}</span>
+                                    <Typography.Text>{item.message}</Typography.Text>
                                 ) : (
                                     // eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/no-static-element-interactions
-                                    <Typography.Link onClick={() => updateNotification(item._id)}>
+                                    <Typography.Link
+                                        onClick={() => handleUpdateNotification(item._id)}
+                                    >
                                         {item.message}
                                     </Typography.Link>
                                 )

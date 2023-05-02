@@ -17,7 +17,7 @@ function Notifications({ notificationData }) {
     ];
     return (
         <Card className="w-96">
-            <Tabs defaultActiveKey="unseen" centered items={notificationTabs} />
+            <Tabs size="small" defaultActiveKey="unseen" centered items={notificationTabs} />
         </Card>
     );
 }

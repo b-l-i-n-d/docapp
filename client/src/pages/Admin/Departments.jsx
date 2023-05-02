@@ -31,6 +31,13 @@ function Departments() {
             error: deleteDepartmentError,
         },
     ] = useDeleteDepartmentMutation();
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const { Search } = Input;
+
+    const handleSearch = (value) => {
+        setSearchQuery(value);
+    };
 
     const handleModalOpen = () => {
         setIsModalOpen(true);
@@ -70,11 +77,13 @@ function Departments() {
             title: 'Department Name',
             dataIndex: 'name',
             key: 'name',
+            sorter: (a, b) => a.name.localeCompare(b.name),
         },
         {
             title: 'Total Doctors',
             dataIndex: 'doctors',
             key: 'doctors',
+            sorter: (a, b) => a.doctors.length - b.doctors.length,
             render: (doctors) => doctors.length,
         },
         {
@@ -110,6 +119,10 @@ function Departments() {
             ),
         },
     ];
+
+    const data = departments?.filter((department) =>
+        department.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     useEffect(() => {
         if (error) {
@@ -188,14 +201,27 @@ function Departments() {
             <Card
                 title="Departments"
                 extra={
-                    <Button type="primary" icon={<PlusCircleOutlined />} onClick={handleAddModal}>
-                        Add Department
-                    </Button>
+                    <Space>
+                        <Search
+                            onSearch={handleSearch}
+                            allowClear
+                            enterButton
+                            placeholder="Search Department"
+                        />
+                        <Button
+                            type="primary"
+                            icon={<PlusCircleOutlined />}
+                            onClick={handleAddModal}
+                        >
+                            Add Department
+                        </Button>
+                    </Space>
                 }
             >
                 <Table
+                    bordered
                     loading={isLoading}
-                    dataSource={departments}
+                    dataSource={data}
                     rowKey={(record) => record._id}
                     columns={columns}
                 />

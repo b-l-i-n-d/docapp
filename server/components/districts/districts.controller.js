@@ -3,7 +3,7 @@ import District from './districts.model.js';
 
 const getAllDistricts = async (req, res) => {
     try {
-        const districts = await District.find().lean();
+        const districts = await District.find().select('name').lean();
         return res.status(200).json(districts);
     } catch (error) {
         return res.status(500).json({

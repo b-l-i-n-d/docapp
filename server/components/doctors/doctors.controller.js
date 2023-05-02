@@ -256,8 +256,14 @@ const getDoctor = async (req, res) => {
         }
 
         const result = doctorId
-            ? await Doctor.findById(doctorId).populate('department', 'name').lean()
-            : await Doctor.findOne({ userId }).populate('department', 'name').lean();
+            ? await Doctor.findById(doctorId)
+                  .populate('department', 'name')
+                  .populate('workplace', 'orgName')
+                  .lean()
+            : await Doctor.findOne({ userId })
+                  .populate('department', 'name')
+                  .populate('workplace', 'orgName')
+                  .lean();
 
         return res.status(200).json(result);
     } catch (error) {
@@ -272,6 +278,7 @@ const getAllDoctors = async (req, res) => {
         const result = await Doctor.find({})
             .populate('department', 'name')
             .populate('presentAddress', 'name')
+            .populate('workplace', 'orgName')
             .lean();
 
         return res.status(200).json(result);
@@ -286,6 +293,7 @@ const getApprovedDoctors = async (req, res) => {
     try {
         const result = await Doctor.find({ status: 'approved' })
             .populate('department', 'name')
+            .populate('workplace', 'orgName')
             .select(
                 '_id name title image doctorType bmdcRegNo department specialized workplace chamber'
             )

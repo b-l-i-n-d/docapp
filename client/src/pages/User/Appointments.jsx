@@ -170,7 +170,7 @@ function Appointments() {
 
     return (
         <Card title="Appointments" loading={isLoading}>
-            {user.isDoctor !== 'pending' || user.isDoctor !== 'no' ? (
+            {user.isDoctor !== 'pending' && user.isDoctor !== 'no' ? (
                 <Tabs defaultActiveKey="1" type="card" items={tabItems} size="large" />
             ) : (
                 <Table

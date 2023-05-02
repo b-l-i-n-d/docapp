@@ -93,7 +93,7 @@ function DoctorInfo({ doctorData }) {
                         {doctorData.specialized}
                     </Descriptions.Item>
                     <Descriptions.Item label="Current Workplace">
-                        {doctorData.workplace}
+                        {doctorData.workplace.orgName}
                     </Descriptions.Item>
                 </Descriptions>
 

@@ -17,11 +17,12 @@ import {
     Tag,
     Tooltip,
     Typography,
+    notification,
 } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
-import { useGetAllDoctorsQuery, useUpdateStatusMutation } from '../../redux/api/doctorAPI';
 import { useGetDepartmentsQuery } from '../../redux/api/departmentAPI';
+import { useGetAllDoctorsQuery, useUpdateStatusMutation } from '../../redux/api/doctorAPI';
 
 function Doctors() {
     const { data: doctors, isLoading: isGetAllDoctorsLoading } = useGetAllDoctorsQuery();
@@ -38,12 +39,6 @@ function Doctors() {
             status: doctorStatus,
         });
     };
-
-    useEffect(() => {
-        if (updatedDoctor) {
-            console.log('updatedDoctor', updatedDoctor);
-        }
-    }, [isUpdateStatusLoading, updatedDoctor, doctors, searchQuery]);
 
     const columns = [
         {
@@ -232,8 +227,8 @@ function Doctors() {
                 showTitle: false,
             },
             render: (workplace) => (
-                <Tooltip placement="topLeft" title={workplace}>
-                    {workplace}
+                <Tooltip placement="topLeft" title={workplace.orgName}>
+                    {workplace.orgName}
                 </Tooltip>
             ),
         },
@@ -447,6 +442,16 @@ function Doctors() {
             ...user,
             key: user._id,
         }));
+
+    useEffect(() => {
+        if (updatedDoctor && !isUpdateStatusLoading) {
+            notification.success({
+                message: `Doctor ${updatedDoctor.name} is ${updatedDoctor.status}`,
+                placement: 'bottomRight',
+                duration: 3,
+            });
+        }
+    }, [isUpdateStatusLoading, updatedDoctor]);
 
     return (
         <Card

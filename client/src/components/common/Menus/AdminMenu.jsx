@@ -39,14 +39,7 @@ function AdminMenu() {
             icon: <AiOutlineProfile size={16} />,
         },
     ];
-    return (
-        <Menu
-            mode="inline"
-            selectedKeys={[pathname]}
-            className="bg-base-100"
-            items={adminMenuItems}
-        />
-    );
+    return <Menu mode="inline" selectedKeys={[pathname]} items={adminMenuItems} />;
 }
 
 export default AdminMenu;
