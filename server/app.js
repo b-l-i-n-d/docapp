@@ -82,12 +82,12 @@ app.use(
 app.get('/', (req, res) => {
     res.send('DOCAPP API');
 });
-app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/doctors', doctorRoutes);
-app.use('/api/v1/appointments', appointmentRoutes);
-app.use('/api/v1/departments', departmentRoutes);
-app.use('/api/v1/districts', districtsRoutes);
-app.use('/api/v1/workplaces', workplacesRoutes);
+app.use(`${urlConfig.BACK_URL_PREFIX}/users`, userRoutes);
+app.use(`${urlConfig.BACK_URL_PREFIX}/doctors`, doctorRoutes);
+app.use(`${urlConfig.BACK_URL_PREFIX}/appointments`, appointmentRoutes);
+app.use(`${urlConfig.BACK_URL_PREFIX}/departments`, departmentRoutes);
+app.use(`${urlConfig.BACK_URL_PREFIX}/districts`, districtsRoutes);
+app.use(`${urlConfig.BACK_URL_PREFIX}/workplaces`, workplacesRoutes);
 
 // show 404 if URL not found
 app.use((req, res) => {

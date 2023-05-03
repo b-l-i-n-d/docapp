@@ -18,7 +18,7 @@ router.get(
     appointmentsController.getAppointments
 );
 
-// Get appointments by doctor id query
+// Get appointments by query
 router.get(
     '/',
     [auth.verifyRefreshToken, auth.verifyAccessToken, doctors.isLoggedUserDoctor],

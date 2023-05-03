@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+import { generateQueryUrl } from '../../helpers';
 import { apiSlice } from './apiSlice';
 
 export const appointmentAPI = apiSlice.injectEndpoints({
@@ -13,12 +15,16 @@ export const appointmentAPI = apiSlice.injectEndpoints({
         }),
 
         getUserAppointments: builder.query({
-            query: (page) => ({
-                url: `/appointments/me?page=${page}&limit=${import.meta.env.VITE_PAGE_SIZE}`,
+            query: ({ dcotorId, date, page }) => ({
+                url: generateQueryUrl(`/appointments/me`, {
+                    doctorId: dcotorId,
+                    date,
+                    page,
+                    limit: import.meta.env.VITE_PAGE_SIZE,
+                }),
                 method: 'GET',
                 credentials: 'include',
             }),
-            // per page
             providesTags: (result, error, arg) =>
                 result
                     ? [
@@ -29,10 +35,15 @@ export const appointmentAPI = apiSlice.injectEndpoints({
         }),
 
         getDoctorAppointments: builder.query({
-            query: ({ id, page }) => ({
-                url: `/appointments?doctorId=${id}&page=${page}&limit=${
-                    import.meta.env.VITE_PAGE_SIZE
-                }`,
+            query: ({ id, page, count, date, recent }) => ({
+                url: generateQueryUrl(`/appointments`, {
+                    doctorId: id,
+                    page,
+                    limit: import.meta.env.VITE_PAGE_SIZE,
+                    count,
+                    date,
+                    recent,
+                }),
                 method: 'GET',
                 credentials: 'include',
             }),
@@ -96,6 +107,7 @@ export const {
     useAddAppointmentMutation,
     useGetUserAppointmentsQuery,
     useGetDoctorAppointmentsQuery,
+    useLazyGetDoctorAppointmentsQuery,
     useGetAppointmentsCountByIdQuery,
     useGetAppointmentsCountByIdAndDateQuery,
     useLazyGetAppointmentsCountByIdAndDateQuery,

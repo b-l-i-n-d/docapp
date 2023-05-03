@@ -57,7 +57,7 @@ function DoctorDetails() {
     );
 
     const chamberDaysItems = doctor?.chamber?.days.map((day) => (
-        <Space key={Math.random}>
+        <Space key={Math.random()}>
             <Space>
                 <MdOutlineCalendarToday />
                 <span className="font-bold">{day.day}</span>
@@ -76,7 +76,7 @@ function DoctorDetails() {
             loading={isLoading}
             title={
                 <span>
-                    Book Appionment of <sapn className="text-primary">{doctor?.name}</sapn>
+                    Book Appionment of <span className="text-primary">{doctor?.name}</span>
                 </span>
             }
         >

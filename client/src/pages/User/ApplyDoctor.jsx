@@ -141,7 +141,14 @@ function ApplyDoctor() {
             {user.isDoctor === 'pending' || user.isDoctor !== 'no' ? (
                 <Doctor.DoctorInfo doctorData={doctorData} />
             ) : (
-                <Form layout="vertical" form={form} onFinish={onFinish}>
+                <Form
+                    initialValues={{
+                        dateOfBirth: dayjs().subtract(18, 'years'),
+                    }}
+                    layout="vertical"
+                    form={form}
+                    onFinish={onFinish}
+                >
                     <div>
                         <h1 className="font-bold">Personal Information</h1>
                         <Divider />
@@ -192,7 +199,6 @@ function ApplyDoctor() {
                                     />
                                 </Form.Item>
                             </Col>
-
                             <Col span={24} md={12}>
                                 <Form.Item
                                     required
@@ -263,7 +269,6 @@ function ApplyDoctor() {
                                             // at least 18 years old
                                             current && current > dayjs().subtract(18, 'years')
                                         }
-                                        defaultValue={dayjs().subtract(18, 'years')}
                                     />
                                 </Form.Item>
                             </Col>

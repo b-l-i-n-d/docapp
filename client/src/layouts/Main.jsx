@@ -95,11 +95,18 @@ function Main() {
                     {!collapsed && <h1 className="ml-1 font-bold text-primary">DOCAPP</h1>}
                 </div>
 
-                {user.role === 'admin' ? <Common.Menus.AdminMenu /> : <Common.Menus.UserMenu />}
+                {user.role === 'admin' && <Common.Menus.AdminMenu />}
+                {user.role === 'user' && user.isDoctor !== 'no' && user.isDoctor !== 'pending' && (
+                    <Common.Menus.DoctorMenu />
+                )}
+                {user.role === 'user' &&
+                    (user.isDoctor === 'no' || user.isDoctor === 'pending') && (
+                        <Common.Menus.UserMenu />
+                    )}
             </Sider>
             <Layout
                 className="site-layout transition-all duration-300"
-                style={{ marginLeft: collapsed ? 70 : 190 }}
+                style={{ marginLeft: collapsed ? 80 : 200 }}
             >
                 <Header
                     style={{
@@ -110,7 +117,7 @@ function Main() {
                     }}
                     className={`${collapsed ? 'w-[calc(100%_-_80px)]' : 'w-[calc(100%_-_200px)]'} ${
                         currentTheme === themeConfig.dark ? 'bg-black' : 'bg-base-100'
-                    } px-5 transition-all duration-300 shadow-sm shadow-primary/20 z-10 space-x-2`}
+                    } px-5 transition-all duration-300 z-10 space-x-2`}
                 >
                     <Menu
                         className="float-right"
@@ -118,7 +125,7 @@ function Main() {
                         mode="horizontal"
                         selectable={false}
                     >
-                        <Menu.Item key="3">
+                        <Menu.Item key="0">
                             <Switch
                                 checked={currentTheme === themeConfig.dark}
                                 onChange={themeChange}

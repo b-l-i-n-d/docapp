@@ -41,7 +41,9 @@ function App() {
                                 <Route path=":doctorId" element={<User.DoctorDetails />} />
                             </Route>
                             <Route path="appointments">
-                                <Route index element={<User.Appointments />} />
+                                <Route index element={<User.Appointments.Index />} />
+                                <Route path="personal" element={<User.Appointments.Personal />} />
+                                <Route path="patient" element={<User.Appointments.Patient />} />
                             </Route>
 
                             <Route element={<AdminOnly />}>

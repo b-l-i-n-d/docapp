@@ -43,7 +43,10 @@ const createAppointment = async (req, res) => {
 
 const getAppointments = async (req, res) => {
     const userId = res.locals.data._id;
-    const { page, limit, doctorId, count, date } = req.query;
+    const { page, limit, doctorId, count, date, recent } = req.query;
+
+    const url = req.originalUrl.split('?')[0].split('/');
+    const lastSegment = url[url.length - 1];
 
     try {
         if (doctorId) {
@@ -62,56 +65,71 @@ const getAppointments = async (req, res) => {
             }
         }
 
-        // const appointments = doctorId
-        //     ? Appointment.find({
-        //           doctorId,
-        //       }).lean()
-        //     : Appointment.find({
-        //           userId,
-        //       })
-        //           .populate('doctorId', 'name')
-        //           .sort({ date: -1 })
-        //           .lean();
-
         let appointments = null;
 
-        switch (true) {
-            case doctorId && date && true: {
+        if (lastSegment !== 'me') {
+            if (recent === 'true' && doctorId) {
+                const restlt = await Appointment.find({
+                    doctorId,
+                })
+                    .populate('doctorId', 'name')
+                    .sort({ createdAt: -1 })
+                    .limit(5)
+                    .lean();
+                return res.status(200).json(restlt);
+            }
+
+            if (doctorId && date) {
                 appointments = Appointment.find({
                     doctorId,
                     date: new Date(date),
                 })
                     .populate('doctorId', 'name')
                     .lean();
-                break;
-            }
-            case doctorId && !date && true: {
+            } else if (doctorId && !date) {
                 appointments = Appointment.find({
                     doctorId,
                 })
                     .populate('doctorId', 'name')
                     .lean();
-                break;
-            }
-            case !doctorId && date && true: {
+            } else if (!doctorId && date) {
                 appointments = Appointment.find({
                     date: new Date(date),
                 })
                     .populate('doctorId', 'name')
                     .lean();
-                break;
             }
-            case !doctorId && !date && true: {
+        } else if (lastSegment === 'me') {
+            if (doctorId && date) {
+                appointments = Appointment.find({
+                    userId,
+                    doctorId,
+                    date: new Date(date),
+                })
+                    .populate('doctorId', 'name')
+                    .lean();
+            } else if (doctorId && !date) {
+                appointments = Appointment.find({
+                    userId,
+                    doctorId,
+                })
+                    .populate('doctorId', 'name')
+                    .lean();
+            } else if (!doctorId && date) {
+                console.log(lastSegment === 'me');
+                appointments = Appointment.find({
+                    userId,
+                    date: new Date(date),
+                })
+                    .populate('doctorId', 'name')
+                    .lean();
+            } else if (!doctorId && !date) {
                 appointments = Appointment.find({
                     userId,
                 })
                     .populate('doctorId', 'name')
                     .sort({ date: -1 })
                     .lean();
-                break;
-            }
-            default: {
-                break;
             }
         }
 
@@ -127,45 +145,5 @@ const getAppointments = async (req, res) => {
         });
     }
 };
-
-// const getAppointmentsCount = async (req, res) => {
-//     const { id: doctorId, date } = req.params;
-
-//     try {
-//         if (doctorId) {
-//             if (!mongoose.Types.ObjectId.isValid(doctorId)) {
-//                 return res.status(400).json({
-//                     error: 'Invalid doctor id',
-//                 });
-//             }
-//         }
-
-//         let appointmentsCount = 0;
-//         switch (true) {
-//             case doctorId && date && true: {
-//                 appointmentsCount = await Appointment.countDocuments({
-//                     doctorId,
-//                     date: new Date(date),
-//                 });
-//                 break;
-//             }
-//             case doctorId && !date && true: {
-//                 appointmentsCount = await Appointment.countDocuments({
-//                     doctorId,
-//                 });
-//                 break;
-//             }
-//             default: {
-//                 break;
-//             }
-//         }
-
-//         return res.status(200).json(appointmentsCount);
-//     } catch (error) {
-//         return res.status(500).json({
-//             error: error.message,
-//         });
-//     }
-// };
 
 export default { createAppointment, getAppointments /* getAppointmentsCount */ };

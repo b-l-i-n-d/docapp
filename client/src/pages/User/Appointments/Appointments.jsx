@@ -5,12 +5,14 @@ import { useSelector } from 'react-redux';
 import {
     useGetDoctorAppointmentsQuery,
     useGetUserAppointmentsQuery,
-} from '../../redux/api/appointmentAPI';
+} from '../../../redux/api/appointmentAPI';
 
 function Appointments() {
     const [currentPage, setCurrentPage] = useState(1);
     const user = useSelector((state) => state.userState.user);
-    const { data: appointmentsData, isLoading } = useGetUserAppointmentsQuery(currentPage);
+    const { data: appointmentsData, isLoading } = useGetUserAppointmentsQuery({
+        page: currentPage,
+    });
     const { data: doctorAppointmentsData, isLoading: isDoctorAppointmentsLoading } =
         useGetDoctorAppointmentsQuery(
             {
@@ -18,7 +20,7 @@ function Appointments() {
                 page: currentPage,
             },
             {
-                skip: user?.isDoctor === 'pending' || user?.isDoctor === 'no',
+                skip: user?.isDoctor === 'no' || user?.isDoctor === 'pending',
             }
         );
 
@@ -169,7 +171,7 @@ function Appointments() {
     ];
 
     return (
-        <Card title="Appointments" loading={isLoading}>
+        <Card title="Appointments" loading={isLoading || isDoctorAppointmentsLoading}>
             {user.isDoctor !== 'pending' && user.isDoctor !== 'no' ? (
                 <Tabs defaultActiveKey="1" type="card" items={tabItems} size="large" />
             ) : (
