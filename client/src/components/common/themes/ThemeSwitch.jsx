@@ -8,9 +8,9 @@ function ThemeSwitch({ theme }) {
             <input type="checkbox" />
 
             <svg
-                data-set-theme={themeConfig.dark}
+                data-set-theme={themeConfig.DARK}
                 className={`${
-                    theme === themeConfig.VITE_THEME_LIGHT ? 'swap-on' : 'swap-off'
+                    theme === themeConfig.LIGHT ? 'swap-on' : 'swap-off'
                 } fill-current w-6 h-w-6`}
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -19,9 +19,9 @@ function ThemeSwitch({ theme }) {
             </svg>
 
             <svg
-                data-set-theme={themeConfig.light}
+                data-set-theme={themeConfig.LIGHT}
                 className={`${
-                    theme === themeConfig.light ? 'swap-off' : 'swap-on'
+                    theme === themeConfig.LIGHT ? 'swap-off' : 'swap-on'
                 } fill-current w-6 h-w-6`}
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"

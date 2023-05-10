@@ -1,11 +1,6 @@
 import { Menu } from 'antd';
 import React from 'react';
-import {
-    AiOutlineDashboard,
-    AiOutlineProfile,
-    AiOutlineUnorderedList,
-    AiOutlineUser,
-} from 'react-icons/ai';
+import { AiOutlineDashboard, AiOutlineUnorderedList, AiOutlineUser } from 'react-icons/ai';
 import { FaStethoscope } from 'react-icons/fa';
 import { NavLink, useLocation } from 'react-router-dom';
 
@@ -32,11 +27,6 @@ function AdminMenu() {
             label: <NavLink to="/departments">Departments</NavLink>,
             key: '/departments',
             icon: <AiOutlineUnorderedList size={16} />,
-        },
-        {
-            label: 'Profile',
-            key: '/profile',
-            icon: <AiOutlineProfile size={16} />,
         },
     ];
     return <Menu mode="inline" selectedKeys={[pathname]} items={adminMenuItems} />;

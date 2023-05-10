@@ -118,13 +118,11 @@ function ApplyDoctor() {
             notification.error({
                 message: error.data ? error.data.error : 'Can not connect to server.',
                 description: error.data ? error.data.description : 'Please try again.',
-                placement: 'bottomRight',
             });
         }
-        if (addedDoctor && !isLoading) {
+        if (!isLoading && addedDoctor) {
             notification.success({
                 message: "Suucessfully applied for doctor's account.",
-                placement: 'bottomRight',
             });
         }
     }, [addedDoctor, error, isLoading]);
@@ -193,7 +191,6 @@ function ApplyDoctor() {
                                 >
                                     <Input
                                         disabled
-                                        // className="input input-bordered text-base-content"
                                         placeholder="ex: mail@example.com"
                                         value={user.email}
                                     />

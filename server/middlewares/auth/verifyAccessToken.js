@@ -36,7 +36,7 @@ const verifyAccessToken = async (req, res, next) => {
 
         return res.status(406).json({
             isAuth: false,
-            message: 'Your credentials are invalid. Please try login again.',
+            error: 'Your credentials are invalid. Please try login again.',
         });
     }
 

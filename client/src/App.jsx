@@ -1,7 +1,7 @@
-import { ConfigProvider, Result, theme } from 'antd';
+import { ConfigProvider, Result, notification, theme } from 'antd';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { themeChange } from 'theme-change';
 import './App.css';
 import { AdminOnly, NotRequireAuth, PresistLogin, RequiredAuth } from './components/Auth';
@@ -10,6 +10,11 @@ import Main from './layouts/Main';
 import { Admin, Home, Login, Signup, User } from './pages';
 
 function App() {
+    notification.config({
+        placement: 'bottomRight',
+        duration: 3,
+    });
+
     useEffect(() => {
         themeChange(false);
     }, []);
@@ -20,11 +25,11 @@ function App() {
     return (
         <ConfigProvider
             theme={{
-                algorithm: currentTheme === themeConfig.dark ? darkAlgorithm : defaultAlgorithm,
+                algorithm: currentTheme === themeConfig.DARK ? darkAlgorithm : defaultAlgorithm,
 
                 token: {
                     wireframe: false,
-                    colorPrimary: currentTheme === themeConfig.dark ? '#722ED1' : '#7a7676',
+                    colorPrimary: currentTheme === themeConfig.DARK ? '#722ED1' : '#7a7676',
                 },
             }}
         >
@@ -45,7 +50,9 @@ function App() {
                                 <Route path="personal" element={<User.Appointments.Personal />} />
                                 <Route path="patient" element={<User.Appointments.Patient />} />
                             </Route>
-
+                            <Route path="profile">
+                                <Route index element={<User.Profile />} />
+                            </Route>
                             <Route element={<AdminOnly />}>
                                 <Route path="users">
                                     <Route index element={<Admin.Users />} />
@@ -72,7 +79,10 @@ function App() {
                     <Route element={<NotRequireAuth />}>
                         <Route path="/login" element={<Login />} />
                         <Route path="/signup" element={<Signup />} />
+                        <Route path="/forgot-password" element={<User.ForgotPassword />} />
+                        <Route path="*" element={<Navigate to="/login" />} />
                     </Route>
+                    <Route path="/reset-password" element={<User.ResetPassword />} />
                 </Route>
             </Routes>
         </ConfigProvider>

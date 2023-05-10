@@ -2,6 +2,7 @@ import { Card, Table, Tabs, Tag } from 'antd';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { fetchConfig } from '../../../configs';
 import {
     useGetDoctorAppointmentsQuery,
     useGetUserAppointmentsQuery,
@@ -12,12 +13,14 @@ function Appointments() {
     const user = useSelector((state) => state.userState.user);
     const { data: appointmentsData, isLoading } = useGetUserAppointmentsQuery({
         page: currentPage,
+        limit: fetchConfig.LIMIT,
     });
     const { data: doctorAppointmentsData, isLoading: isDoctorAppointmentsLoading } =
         useGetDoctorAppointmentsQuery(
             {
                 id: user?.isDoctor,
                 page: currentPage,
+                limit: fetchConfig.LIMIT,
             },
             {
                 skip: user?.isDoctor === 'no' || user?.isDoctor === 'pending',

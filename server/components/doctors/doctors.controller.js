@@ -261,6 +261,7 @@ const getDoctor = async (req, res) => {
                   .populate('workplace', 'orgName')
                   .lean()
             : await Doctor.findOne({ userId })
+                  .populate('presentAddress', 'name')
                   .populate('department', 'name')
                   .populate('workplace', 'orgName')
                   .lean();

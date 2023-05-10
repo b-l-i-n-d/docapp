@@ -127,8 +127,6 @@ function Departments() {
     useEffect(() => {
         if (error) {
             notification.error({
-                placement: 'bottomRight',
-                duration: 3,
                 message: 'Department Fetching Failed',
                 description: error.data.error,
             });
@@ -140,16 +138,12 @@ function Departments() {
             form.resetFields();
             setIsModalOpen(false);
             notification.success({
-                placement: 'bottomRight',
-                duration: 3,
                 message: 'Department Added Successfully',
             });
         }
 
         if (addDepartmentError) {
             notification.error({
-                placement: 'bottomRight',
-                duration: 3,
                 message: 'Department Adding Failed',
                 description: addDepartmentError.data.error,
             });
@@ -161,16 +155,12 @@ function Departments() {
             form.resetFields();
             setIsModalOpen(false);
             notification.success({
-                placement: 'bottomRight',
-                duration: 3,
                 message: 'Department Edited Successfully',
             });
         }
 
         if (editDepartmentError) {
             notification.error({
-                placement: 'bottomRight',
-                duration: 3,
                 message: 'Department Editing Failed',
                 description: editDepartmentError.data.error,
             });
@@ -180,16 +170,12 @@ function Departments() {
     useEffect(() => {
         if (deletedDepartment && !isDeleteDepartmentLoading) {
             notification.success({
-                placement: 'bottomRight',
-                duration: 3,
                 message: 'Department Deleted Successfully',
             });
         }
 
         if (deleteDepartmentError) {
             notification.error({
-                placement: 'bottomRight',
-                duration: 3,
                 message: 'Department Deleting Failed',
                 description: deleteDepartmentError.data.error,
             });

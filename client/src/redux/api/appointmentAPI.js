@@ -15,12 +15,12 @@ export const appointmentAPI = apiSlice.injectEndpoints({
         }),
 
         getUserAppointments: builder.query({
-            query: ({ dcotorId, date, page }) => ({
+            query: ({ dcotorId, limit, date, page }) => ({
                 url: generateQueryUrl(`/appointments/me`, {
                     doctorId: dcotorId,
                     date,
                     page,
-                    limit: import.meta.env.VITE_PAGE_SIZE,
+                    limit,
                 }),
                 method: 'GET',
                 credentials: 'include',
@@ -35,11 +35,11 @@ export const appointmentAPI = apiSlice.injectEndpoints({
         }),
 
         getDoctorAppointments: builder.query({
-            query: ({ id, page, count, date, recent }) => ({
+            query: ({ id, limit, page, count, date, recent }) => ({
                 url: generateQueryUrl(`/appointments`, {
                     doctorId: id,
                     page,
-                    limit: import.meta.env.VITE_PAGE_SIZE,
+                    limit,
                     count,
                     date,
                     recent,

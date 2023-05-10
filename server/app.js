@@ -67,7 +67,7 @@ app.use(
 );
 app.use(
     cors({
-        origin: [urlConfig.FRONT_URL],
+        origin: [urlConfig.CLIENT_URL],
         credentials: true,
     })
 );

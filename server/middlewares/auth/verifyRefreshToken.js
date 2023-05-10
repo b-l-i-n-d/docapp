@@ -7,7 +7,7 @@ const verifyRefreshToken = async (req, res, next) => {
 
     if (!refreshToken) {
         return res.status(404).json({
-            message: 'Please login.',
+            error: 'Please login.',
         });
     }
 
@@ -29,7 +29,7 @@ const verifyRefreshToken = async (req, res, next) => {
         res.clearCookie(cookiesConfig.refresh.name);
 
         return res.status(406).json({
-            message: 'Your credentials are invalid. Please try login.',
+            error: 'Your credentials are invalid. Please try login.',
         });
     }
 

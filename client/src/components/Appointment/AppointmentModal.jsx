@@ -39,15 +39,11 @@ function AppointmentModal({ button, chamberDays }) {
     useEffect(() => {
         if (appointment && !isAddAppointmentLoading) {
             notification.success({
-                placement: 'bottomRight',
-                duration: 3,
                 message: 'Appointment Booked Successfully',
             });
         }
         if (addAppointmentError) {
             notification.error({
-                placement: 'bottomRight',
-                duration: 3,
                 message: 'Appointment Booking Failed',
                 description: addAppointmentError.message,
             });

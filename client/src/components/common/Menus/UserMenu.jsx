@@ -35,8 +35,8 @@ function UserMenu() {
             icon: <AiOutlineUnorderedList size={16} />,
         },
         {
-            label: 'Profile',
-            key: 'profile',
+            label: <NavLink to="/profile">Profile</NavLink>,
+            key: '/profile',
             icon: <AiOutlineProfile size={16} />,
         },
     ];

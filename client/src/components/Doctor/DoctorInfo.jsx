@@ -78,7 +78,7 @@ function DoctorInfo({ doctorData }) {
                 >
                     <Descriptions.Item label="Title">{doctorData.title}</Descriptions.Item>
                     <Descriptions.Item label="Present Address">
-                        {doctorData.presentAddress}
+                        {doctorData.presentAddress.name}
                     </Descriptions.Item>
                     <Descriptions.Item label="Doctor Type">
                         {doctorData.doctorType}

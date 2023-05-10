@@ -13,21 +13,20 @@ function Signup() {
     }, []);
 
     const theme = localStorage.getItem('theme');
-    const [signupUser, { isError, isLoading, isSuccess, data, error }] = useSignupUserMutation();
+    const [signupUser, { isLoading, isSuccess, data, error }] = useSignupUserMutation();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (isSuccess) {
             navigate('/', { replace: true });
         }
-        if (isError) {
+        if (error) {
             notification.error({
-                message: error.data.error,
-                description: error.data.description,
-                placement: 'bottomRight',
+                message: error?.data ? error?.data.error : 'Can not connect to server.',
+                description: error?.data ? error?.data.description : 'Please try again.',
             });
         }
-    }, [data, error, isError, isLoading, isSuccess, navigate]);
+    }, [data, error, isLoading, isSuccess, navigate]);
 
     const onFinish = (values) => {
         signupUser(values);

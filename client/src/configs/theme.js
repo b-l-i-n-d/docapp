@@ -1,4 +1,4 @@
 export default {
-    light: import.meta.env.VITE_THEME_LIGHT,
-    dark: import.meta.env.VITE_THEME_DARK,
+    LIGHT: import.meta.env.VITE_THEME_LIGHT,
+    DARK: import.meta.env.VITE_THEME_DARK,
 };

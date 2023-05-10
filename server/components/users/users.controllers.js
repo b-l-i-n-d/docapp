@@ -1,7 +1,9 @@
+import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
-import { cookiesConfig, jwtConfig } from '../../configs/index.js';
+import { cookiesConfig, jwtConfig, urlConfig } from '../../configs/index.js';
 import { helpers } from '../../utils/index.js';
+import { tokensModel } from '../tokens/index.js';
 import User from './users.model.js';
 
 const login = async (req, res) => {
@@ -182,6 +184,84 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+const requestPasswordReset = async (req, res) => {
+    const { email } = req.body;
+    // get url path from req
+    const url = req.originalUrl.split('/').pop();
+    console.log(url);
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ error: 'No user found.' });
+        }
+
+        const token = await tokensModel.findOne({ userId: user._id });
+        if (token) {
+            await token.deleteOne();
+        }
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const hash = await helpers.genBcrypt(resetToken);
+
+        const newToken = await tokensModel.create({
+            userId: user._id,
+            token: hash,
+            createdAt: Date.now(),
+        });
+
+        const link = `${urlConfig.CLIENT_URL}/reset-password?token=${resetToken}&id=${newToken.userId}`;
+        const sentEmail = await helpers.sendEmail(
+            email,
+            'Password Reset Request',
+            { name: email, link },
+            'utils/helpers/email/templates/requestChangePassword.handlebars'
+        );
+
+        if (sentEmail) {
+            return res.status(200).json({ message: 'Email sent.' });
+        }
+        return res.status(500).json({ error: 'Something went wrong.' });
+    } catch (error) {
+        return res.status(500).json({ error: 'Something went wrong.' });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    const { password, token, userId } = req.body;
+
+    try {
+        const passwordResetToken = await tokensModel.findOne({ userId });
+        if (!passwordResetToken) {
+            return res.status(404).json({ error: 'Invalid or expired password reset token' });
+        }
+
+        const isValid = await helpers.verifyBcrypt(token, passwordResetToken.token);
+        if (!isValid) {
+            return res.status(404).json({ error: 'Invalid or expired password reset token' });
+        }
+
+        const hash = await helpers.genBcrypt(password);
+        const updatedUser = await User.findByIdAndUpdate(userId, { password: hash }, { new: true });
+
+        const sentEmail = await helpers.sendEmail(
+            updatedUser.email,
+            'Password Reset Successfully',
+            { name: updatedUser.name },
+            'utils/helpers/email/templates/resetPassword.handlebars'
+        );
+
+        if (sentEmail && updatedUser) {
+            await passwordResetToken.deleteOne();
+            return res.status(200).json({ message: 'Password reset successfully.' });
+        }
+        return await passwordResetToken.deleteOne();
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Something went wrong.' });
+    }
+};
+
 export default {
     login,
     logout,
@@ -191,4 +271,6 @@ export default {
     updateNotifications,
     deleteNotification,
     getAllUsers,
+    requestPasswordReset,
+    resetPassword,
 };

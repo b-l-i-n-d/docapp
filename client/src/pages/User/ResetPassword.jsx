@@ -1,42 +1,67 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import { LoadingOutlined } from '@ant-design/icons';
 import { Button, Form, Input, notification } from 'antd';
 import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { themeChange } from 'theme-change';
-import LogoImg from '../assets/login/1.png';
-import { Common } from '../components';
-import ThemeSwitch from '../components/common/themes/ThemeSwitch';
-import { useLoginUserMutation } from '../redux/api/authAPI';
+import { useSelector } from 'react-redux';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import LogoImg from '../../assets/login/1.png';
+import { useResetPasswordMutation } from '../../redux/api/authAPI';
 
-function Login() {
-    useEffect(() => {
-        themeChange(false);
-    }, []);
-
-    const theme = localStorage.getItem('theme');
-    const [loginUser, { isError, isLoading, isSuccess, data, error }] = useLoginUserMutation();
+function ResetPassword() {
+    const [query] = useSearchParams();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (isSuccess) {
-            navigate('/', { replace: true });
-        }
-
-        if (error) {
-            notification.error({
-                message: error.data ? error.data.error : 'Can not connect to server.',
-                description: error.data ? error.data.description : 'Please try again.',
-            });
-        }
-    }, [data, error, isError, isLoading, isSuccess, navigate]);
+    const userId = useSelector((state) => state.userState.user?._id);
+    const [
+        resetPassword,
+        { data: resetPasswordData, isLoading: resetPasswordLoading, error: resetPasswordError },
+    ] = useResetPasswordMutation();
 
     const onFinish = (values) => {
-        loginUser(values);
+        if (values.password !== values.confirmPassword) {
+            notification.error({
+                message: 'Password mismatch',
+                description: 'Please check your password and confirm password',
+            });
+        } else {
+            const token = query.get('token');
+            const id = query.get('id');
+            resetPassword({ ...values, token, userId: id });
+        }
     };
 
-    return isLoading ? (
-        <Common.LoaderOverlay />
-    ) : (
+    useEffect(() => {
+        if (userId !== query.get('id')) {
+            navigate(-1);
+        }
+    }, [userId, query, navigate]);
+
+    useEffect(() => {
+        if (resetPasswordLoading) {
+            notification.open({
+                key: 'resetPassword',
+                icon: <LoadingOutlined spin />,
+                message: 'Resetting password',
+                description: 'Please wait...',
+            });
+        }
+        if (!resetPasswordLoading && resetPasswordData) {
+            notification.success({
+                key: 'resetPassword',
+                message: 'Password reset successfully.',
+                description: 'Please login with your new password',
+            });
+            navigate('/login');
+        }
+        if (!resetPasswordLoading && resetPasswordError) {
+            notification.error({
+                key: 'resetPassword',
+                message: resetPasswordError?.error || resetPasswordError?.data.error,
+                description: resetPasswordError?.data?.description,
+            });
+        }
+    }, [navigate, resetPasswordData, resetPasswordError, resetPasswordLoading]);
+
+    return (
         <div className="hero min-h-screen bg-base-100">
             <div className="hero-content flex-col lg:flex-row-reverse w-full">
                 <div className="text-center flex flex-col items-center lg:text-left lg:ml-5 lg:w-1/2">
@@ -57,35 +82,10 @@ function Login() {
                     <div className="card-body">
                         <div className="flex justify-between items-center mb-5">
                             <h2 className="font-bold text-xl text-base-content rounded-md pb-1 border-b-4 border-primary">
-                                Login
+                                Reset Password
                             </h2>
-                            <ThemeSwitch theme={theme} />
                         </div>
                         <Form layout="vertical" onFinish={onFinish}>
-                            <Form.Item
-                                label={<label className="text-base-content">Email</label>}
-                                className="form-control"
-                            >
-                                <Form.Item
-                                    name="email"
-                                    noStyle
-                                    rules={[
-                                        {
-                                            type: 'email',
-                                            message: 'Enter a valid email',
-                                        },
-                                        {
-                                            required: true,
-                                            message: 'Please input your E-mail!',
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        className="input input-bordered text-base-content"
-                                        placeholder="ex: mail@example.com"
-                                    />
-                                </Form.Item>
-                            </Form.Item>
                             <Form.Item
                                 label={<label className="text-base-content">Password</label>}
                                 className="form-control text-base-100"
@@ -110,24 +110,37 @@ function Login() {
                                     />
                                 </Form.Item>
                             </Form.Item>
+                            <Form.Item
+                                label={
+                                    <label className="text-base-content">Confirm Password</label>
+                                }
+                                className="form-control text-base-100"
+                            >
+                                <Form.Item
+                                    name="confirmPassword"
+                                    noStyle
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Confrim password is required',
+                                        },
+                                    ]}
+                                >
+                                    <Input.Password
+                                        className="input input-bordered text-base-content antdInputPassword antdInputPasswordIcon"
+                                        placeholder="Confirm Password"
+                                    />
+                                </Form.Item>
+                            </Form.Item>
                             <Form.Item className="form-control">
                                 <Button
                                     className="btn w-full btn-primary hover:text-base-100 focus:btn-primary ring-primary focus:ring-1 ring-offset-2 mt-4"
                                     htmlType="submit"
                                 >
-                                    Login
+                                    Reset Password
                                 </Button>
                             </Form.Item>
                         </Form>
-                        <Link to="/forgot-password" className="link link-primary font-bold">
-                            Forgot password?
-                        </Link>
-                        <p>
-                            Dont&apos;t have any account.{' '}
-                            <Link to="/signup" className="link link-primary font-bold">
-                                Create account
-                            </Link>
-                        </p>
                     </div>
                 </div>
             </div>
@@ -135,4 +148,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default ResetPassword;

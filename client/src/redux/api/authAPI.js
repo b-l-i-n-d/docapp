@@ -7,14 +7,12 @@ import { userAPI } from './userAPI';
 export const authAPI = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         loginUser: builder.mutation({
-            query(data) {
-                return {
-                    url: '/users/login',
-                    method: 'POST',
-                    credentials: 'include',
-                    body: data,
-                };
-            },
+            query: (data) => ({
+                url: '/users/login',
+                method: 'POST',
+                credentials: 'include',
+                body: data,
+            }),
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
@@ -26,14 +24,12 @@ export const authAPI = apiSlice.injectEndpoints({
             },
         }),
         signupUser: builder.mutation({
-            query(data) {
-                return {
-                    url: '/users/signup',
-                    method: 'POST',
-                    credentials: 'include',
-                    body: data,
-                };
-            },
+            query: (data) => ({
+                url: '/users/signup',
+                method: 'POST',
+                credentials: 'include',
+                body: data,
+            }),
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
@@ -45,13 +41,11 @@ export const authAPI = apiSlice.injectEndpoints({
             },
         }),
         logoutUser: builder.query({
-            query() {
-                return {
-                    url: '/users/logout',
-                    method: 'GET',
-                    credentials: 'include',
-                };
-            },
+            query: () => ({
+                url: '/users/logout',
+                method: 'GET',
+                credentials: 'include',
+            }),
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
@@ -67,18 +61,42 @@ export const authAPI = apiSlice.injectEndpoints({
             },
         }),
         verifyToken: builder.query({
-            query() {
-                return {
-                    url: '/users/verifyToken',
-                    method: 'GET',
-                    credentials: 'include',
-                };
-            },
+            query: () => ({
+                url: '/users/verifyToken',
+                method: 'GET',
+                credentials: 'include',
+            }),
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
                     const user = await cookieExtractor(data.data.accessToken);
                     dispatch(setUser(user));
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+        }),
+        requestPasswordReset: builder.mutation({
+            query: (data) => ({
+                url: '/users/requestPasswordReset',
+                method: 'POST',
+                credentials: 'include',
+                body: data,
+            }),
+        }),
+        resetPassword: builder.mutation({
+            query: (data) => ({
+                url: '/users/resetPassword',
+                method: 'PATCH',
+                credentials: 'include',
+                body: data,
+            }),
+            async onQueryStarted(args, { dispatch, queryFulfilled }) {
+                const { data } = await queryFulfilled;
+                try {
+                    if (data.message) {
+                        await dispatch(authAPI.endpoints.logoutUser.initiate());
+                    }
                 } catch (error) {
                     console.log(error);
                 }
@@ -92,5 +110,6 @@ export const {
     useSignupUserMutation,
     useLazyLogoutUserQuery,
     useVerifyTokenQuery,
-    usePrefetch,
+    useRequestPasswordResetMutation,
+    useResetPasswordMutation,
 } = authAPI;

@@ -1,3 +1,4 @@
+import sendEmail from './email/sendEmail.js';
 import genBcrypt from './genBcrypt.js';
 import imageDelete from './imageDelete.js';
 import imageUpload from './imageUpload.js';
@@ -14,4 +15,5 @@ export default {
     imageUpload,
     imageDelete,
     paginateQuery,
+    sendEmail,
 };

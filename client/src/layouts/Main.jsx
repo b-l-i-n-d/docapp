@@ -1,4 +1,4 @@
-import { Avatar, Badge, Dropdown, Layout, Menu, Space, Switch } from 'antd';
+import { Avatar, Badge, Dropdown, Layout, Menu, Space, Switch, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineBell, AiOutlineLogout, AiOutlineUser } from 'react-icons/ai';
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
@@ -18,50 +18,25 @@ function Main() {
     const dispatch = useAppDispatch();
     const currentTheme = useSelector((state) => state.theme.theme);
     const user = useSelector((store) => store.userState.user);
-    const notification = useSelector((store) => store.userState.notification);
+    const notifications = useSelector((store) => store.userState.notification);
     const [collapsed, setCollapsed] = useState(false);
     const [logOutUser, { isLoading: isLogOutLoading, error: logOutError }] =
         useLazyLogoutUserQuery();
 
-    const { isLoading, error } = useGetNotificationQuery(undefined, {
+    const { error } = useGetNotificationQuery(undefined, {
+        skip: !user,
         pollingInterval: 10000,
     });
 
     const themeChange = (checked) => {
         if (checked) {
-            dispatch(setTheme(themeConfig.dark));
+            dispatch(setTheme(themeConfig.DARK));
         } else {
-            dispatch(setTheme(themeConfig.light));
+            dispatch(setTheme(themeConfig.LIGHT));
         }
     };
 
-    useEffect(() => {
-        if (logOutError) {
-            notification.error({
-                message: logOutError?.data ? logOutError.data.error : 'Can not connect to server.',
-                description: logOutError?.data
-                    ? logOutError?.data.description
-                    : 'Please try again.',
-                placement: 'bottomRight',
-            });
-        }
-        if (error) {
-            notification.error({
-                message: logOutError?.data ? logOutError?.data.error : 'Can not connect to server.',
-                description: logOutError?.data
-                    ? logOutError?.data.description
-                    : 'Please try again.',
-                placement: 'bottomRight',
-            });
-        }
-    }, [logOutError, isLogOutLoading, notification, isLoading, error]);
-
     const dropDownMenuItems = [
-        {
-            label: 'Profile',
-            key: 'profile',
-            icon: <AiOutlineUser size={16} />,
-        },
         {
             label: 'Logout',
             key: 'logout',
@@ -70,10 +45,30 @@ function Main() {
         },
     ];
 
+    useEffect(() => {
+        if (logOutError) {
+            notification.error({
+                message: logOutError?.data ? logOutError.data.error : 'Can not connect to server.',
+                description: logOutError?.data
+                    ? logOutError?.data.description
+                    : 'Please try again.',
+            });
+        }
+    }, [logOutError]);
+
+    useEffect(() => {
+        if (error) {
+            notification.error({
+                message: error?.data ? error?.data.error : 'Can not connect to server.',
+                description: error?.data ? error?.data.description : 'Please try again.',
+            });
+        }
+    }, [error, logOutError]);
+
     return isLogOutLoading ? (
         <Common.LoaderOverlay />
     ) : (
-        <Layout hasSider className="min-h-screen">
+        <Layout hasSider className="min-h-screen shadow-sm shadow-black">
             <Sider
                 style={{
                     overflow: 'auto',
@@ -82,6 +77,7 @@ function Main() {
                     left: 0,
                     top: 0,
                     bottom: 0,
+                    borderRight: currentTheme === themeConfig.DARK ? '1px solid #313131' : 'none',
                 }}
                 breakpoint="lg"
                 collapsible
@@ -105,7 +101,7 @@ function Main() {
                     )}
             </Sider>
             <Layout
-                className="site-layout transition-all duration-300"
+                className="site-layout transition-all duration-300 shadow-sm shadow-black"
                 style={{ marginLeft: collapsed ? 80 : 200 }}
             >
                 <Header
@@ -114,9 +110,12 @@ function Main() {
                         top: 0,
                         zIndex: 10,
                         width: '100%',
+                        backgroundColor: currentTheme === themeConfig.DARK ? '#141414' : '#fff',
+                        borderBottom:
+                            currentTheme === themeConfig.DARK ? '1px solid #313131' : 'none',
                     }}
                     className={`${collapsed ? 'w-[calc(100%_-_80px)]' : 'w-[calc(100%_-_200px)]'} ${
-                        currentTheme === themeConfig.dark ? 'bg-black' : 'bg-base-100'
+                        currentTheme === themeConfig.DARK ? 'bg-black' : 'bg-base-100'
                     } px-5 transition-all duration-300 z-10 space-x-2`}
                 >
                     <Menu
@@ -127,7 +126,7 @@ function Main() {
                     >
                         <Menu.Item key="0">
                             <Switch
-                                checked={currentTheme === themeConfig.dark}
+                                checked={currentTheme === themeConfig.DARK}
                                 onChange={themeChange}
                                 checkedChildren={<MdOutlineLightMode />}
                                 unCheckedChildren={<MdOutlineDarkMode />}
@@ -137,12 +136,12 @@ function Main() {
                             <Dropdown
                                 // eslint-disable-next-line react/no-unstable-nested-components
                                 dropdownRender={() => (
-                                    <Common.Notifications notificationData={notification} />
+                                    <Common.Notifications notificationData={notifications} />
                                 )}
                                 trigger={['click']}
                                 placement="bottomRight"
                             >
-                                <Badge count={notification?.unSeenNotification?.length}>
+                                <Badge count={notifications?.unSeenNotification?.length}>
                                     <Space>
                                         <Avatar
                                             style={{

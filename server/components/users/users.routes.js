@@ -44,4 +44,8 @@ router.get(
     usersController.getAllUsers
 );
 
+router.post('/requestPasswordReset', usersController.requestPasswordReset);
+
+router.patch('/resetPassword', usersController.resetPassword);
+
 export default router;

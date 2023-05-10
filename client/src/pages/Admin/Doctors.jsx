@@ -447,8 +447,6 @@ function Doctors() {
         if (updatedDoctor && !isUpdateStatusLoading) {
             notification.success({
                 message: `Doctor ${updatedDoctor.name} is ${updatedDoctor.status}`,
-                placement: 'bottomRight',
-                duration: 3,
             });
         }
     }, [isUpdateStatusLoading, updatedDoctor]);

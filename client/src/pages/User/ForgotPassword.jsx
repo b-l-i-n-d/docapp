@@ -1,42 +1,54 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import { LoadingOutlined } from '@ant-design/icons';
 import { Button, Form, Input, notification } from 'antd';
 import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { themeChange } from 'theme-change';
-import LogoImg from '../assets/login/1.png';
-import { Common } from '../components';
-import ThemeSwitch from '../components/common/themes/ThemeSwitch';
-import { useLoginUserMutation } from '../redux/api/authAPI';
+import LogoImg from '../../assets/login/1.png';
+import ThemeSwitch from '../../components/common/themes/ThemeSwitch';
+import { useRequestPasswordResetMutation } from '../../redux/api/authAPI';
 
-function Login() {
+function ForgotPassword() {
     useEffect(() => {
         themeChange(false);
     }, []);
 
     const theme = localStorage.getItem('theme');
-    const [loginUser, { isError, isLoading, isSuccess, data, error }] = useLoginUserMutation();
-    const navigate = useNavigate();
+    const [
+        requestPasswordReset,
+        { data: resetPasswordData, isLoading: resetPasswordLoading, error: resetPasswordError },
+    ] = useRequestPasswordResetMutation();
 
     useEffect(() => {
-        if (isSuccess) {
-            navigate('/', { replace: true });
-        }
-
-        if (error) {
-            notification.error({
-                message: error.data ? error.data.error : 'Can not connect to server.',
-                description: error.data ? error.data.description : 'Please try again.',
+        if (resetPasswordLoading) {
+            notification.open({
+                key: 'resetPassword',
+                duration: 0,
+                message: 'Sending email',
+                icon: <LoadingOutlined spin />,
             });
         }
-    }, [data, error, isError, isLoading, isSuccess, navigate]);
+        if (!resetPasswordLoading && resetPasswordData) {
+            notification.success({
+                key: 'resetPassword',
+                message: 'Email sent.',
+                description: 'Please check your email to reset password',
+            });
+        }
+        if (!resetPasswordLoading && resetPasswordError) {
+            notification.error({
+                key: 'resetPassword',
+                message: resetPasswordError?.error || resetPasswordError?.data.error,
+                description: resetPasswordError?.data?.description,
+            });
+        }
+    }, [resetPasswordData, resetPasswordError, resetPasswordLoading]);
 
     const onFinish = (values) => {
-        loginUser(values);
+        requestPasswordReset(values);
     };
 
-    return isLoading ? (
-        <Common.LoaderOverlay />
-    ) : (
+    return (
         <div className="hero min-h-screen bg-base-100">
             <div className="hero-content flex-col lg:flex-row-reverse w-full">
                 <div className="text-center flex flex-col items-center lg:text-left lg:ml-5 lg:w-1/2">
@@ -57,7 +69,7 @@ function Login() {
                     <div className="card-body">
                         <div className="flex justify-between items-center mb-5">
                             <h2 className="font-bold text-xl text-base-content rounded-md pb-1 border-b-4 border-primary">
-                                Login
+                                Forgot Password
                             </h2>
                             <ThemeSwitch theme={theme} />
                         </div>
@@ -86,42 +98,17 @@ function Login() {
                                     />
                                 </Form.Item>
                             </Form.Item>
-                            <Form.Item
-                                label={<label className="text-base-content">Password</label>}
-                                className="form-control text-base-100"
-                            >
-                                <Form.Item
-                                    name="password"
-                                    noStyle
-                                    rules={[
-                                        {
-                                            min: 6,
-                                            message: 'Must be at least 6 chars long',
-                                        },
-                                        {
-                                            required: true,
-                                            message: 'Password is required',
-                                        },
-                                    ]}
-                                >
-                                    <Input.Password
-                                        className="input input-bordered text-base-content antdInputPassword antdInputPasswordIcon"
-                                        placeholder="min 6 chars long"
-                                    />
-                                </Form.Item>
-                            </Form.Item>
                             <Form.Item className="form-control">
                                 <Button
-                                    className="btn w-full btn-primary hover:text-base-100 focus:btn-primary ring-primary focus:ring-1 ring-offset-2 mt-4"
+                                    loading={resetPasswordLoading}
+                                    className="btn w-full btn-primary hover:text-base-100
+                                    focus:btn-primary ring-primary focus:ring-1 ring-offset-2 mt-4"
                                     htmlType="submit"
                                 >
-                                    Login
+                                    Request Password Reset
                                 </Button>
                             </Form.Item>
                         </Form>
-                        <Link to="/forgot-password" className="link link-primary font-bold">
-                            Forgot password?
-                        </Link>
                         <p>
                             Dont&apos;t have any account.{' '}
                             <Link to="/signup" className="link link-primary font-bold">
@@ -135,4 +122,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default ForgotPassword;
