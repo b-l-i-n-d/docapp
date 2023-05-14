@@ -9,10 +9,12 @@ export const apiSlice = createApi({
     tagTypes: [
         'Appointments',
         'Auth',
+        'Dashboard',
         'Departments',
         'Districts',
         'Doctors',
         'DoctorAppointment',
+        'Notifications',
         'Users',
         'Workplaces',
     ],

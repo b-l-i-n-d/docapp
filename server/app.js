@@ -6,6 +6,7 @@ import 'dotenv/config.js';
 import express from 'express';
 import morgan from 'morgan';
 import appointmentRoutes from './components/appointments/appointments.routes.js';
+import dashboardRoutes from './components/dashboard/dashboard.routes.js';
 import departmentRoutes from './components/departments/departments.routes.js';
 import districtsRoutes from './components/districts/districts.routes.js';
 import doctorRoutes from './components/doctors/doctors.routes.js';
@@ -88,6 +89,7 @@ app.use(`${urlConfig.BACK_URL_PREFIX}/appointments`, appointmentRoutes);
 app.use(`${urlConfig.BACK_URL_PREFIX}/departments`, departmentRoutes);
 app.use(`${urlConfig.BACK_URL_PREFIX}/districts`, districtsRoutes);
 app.use(`${urlConfig.BACK_URL_PREFIX}/workplaces`, workplacesRoutes);
+app.use(`${urlConfig.BACK_URL_PREFIX}/dashboard`, dashboardRoutes);
 
 // show 404 if URL not found
 app.use((req, res) => {

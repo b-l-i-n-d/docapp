@@ -12,7 +12,7 @@ import {
 
 dayjs.extend(relativeTime);
 
-function NotificationList({ data, type }) {
+function NotificationList({ data, type, pagination }) {
     const icons = { ndr: FaStethoscope, default: AiOutlineNotification };
     const bgColor = {
         ndr: 'bg-gradient-to-t from-pink-500 via-red-500 to-yellow-500',
@@ -31,6 +31,7 @@ function NotificationList({ data, type }) {
 
     return (
         <List
+            pagination={pagination ? { pageSize: 10 } : false}
             loading={isLoading || isDeleteLoading}
             itemLayout="horizontal"
             dataSource={data}

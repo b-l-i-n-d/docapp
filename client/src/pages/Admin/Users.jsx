@@ -3,7 +3,6 @@ import {
     CloseCircleOutlined,
     DeleteOutlined,
     DownOutlined,
-    EditOutlined,
     LockOutlined,
     SyncOutlined,
     UserOutlined,
@@ -19,11 +18,6 @@ function Users() {
     const menuItems = [
         {
             key: '1',
-            label: 'Edit',
-            icon: <EditOutlined />,
-        },
-        {
-            key: '2',
             label: 'Delete',
             icon: <DeleteOutlined />,
         },

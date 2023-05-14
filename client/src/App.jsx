@@ -7,7 +7,7 @@ import './App.css';
 import { AdminOnly, NotRequireAuth, PresistLogin, RequiredAuth } from './components/Auth';
 import { themeConfig } from './configs';
 import Main from './layouts/Main';
-import { Admin, Home, Login, Signup, User } from './pages';
+import { Admin, AllNotifications, Home, Login, Signup, User } from './pages';
 
 function App() {
     notification.config({
@@ -29,7 +29,7 @@ function App() {
 
                 token: {
                     wireframe: false,
-                    colorPrimary: currentTheme === themeConfig.DARK ? '#722ED1' : '#7a7676',
+                    colorPrimary: currentTheme === themeConfig.DARK ? '#722ED1' : '#FA8C16',
                 },
             }}
         >
@@ -41,7 +41,7 @@ function App() {
                             <Route path="apply">
                                 <Route index element={<User.ApplyDoctor />} />
                             </Route>
-                            <Route path="book-appionments">
+                            <Route path="book-appointments">
                                 <Route index element={<User.BookAppoinments />} />
                                 <Route path=":doctorId" element={<User.DoctorDetails />} />
                             </Route>
@@ -53,7 +53,13 @@ function App() {
                             <Route path="profile">
                                 <Route index element={<User.Profile />} />
                             </Route>
+                            <Route path="notifications">
+                                <Route index element={<AllNotifications />} />
+                            </Route>
                             <Route element={<AdminOnly />}>
+                                <Route path="dashboard">
+                                    <Route index element={<Admin.Dashboard />} />
+                                </Route>
                                 <Route path="users">
                                     <Route index element={<Admin.Users />} />
                                 </Route>

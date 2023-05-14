@@ -64,7 +64,7 @@ function DoctorCard({ isLoading, doctor }) {
                     ৳ {chamber.fees}
                 </Title>
                 <Link to={_id}>
-                    <Button type="primary">Book Appionment</Button>
+                    <Button type="primary">Book Appointment</Button>
                 </Link>
             </Card.Grid>
         </Card>

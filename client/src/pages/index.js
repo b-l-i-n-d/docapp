@@ -3,5 +3,6 @@ import Home from './Home';
 import Login from './Login';
 import Signup from './Signup';
 import User from './User';
+import AllNotifications from './AllNotifications';
 
-export { Home, Login, Signup, Admin, User };
+export { AllNotifications, Home, Login, Signup, Admin, User };

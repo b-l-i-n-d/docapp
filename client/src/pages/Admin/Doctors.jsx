@@ -75,6 +75,40 @@ function Doctors() {
             render: (image) => <Avatar src={image} />,
         },
         {
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
+            ellipsis: {
+                showTitle: false,
+            },
+            render: (title) => (
+                <Tooltip placement="topLeft" title={title}>
+                    {title}
+                </Tooltip>
+            ),
+            filteredValue: filteredInfo.title || null,
+            filters: [
+                {
+                    text: 'Dr.',
+                    value: 'Dr.',
+                },
+                {
+                    text: 'Prof. Dr.',
+                    value: 'Prof. Dr.',
+                },
+                {
+                    text: 'Assoc. Prof. Dr.',
+                    value: 'Assoc. Prof. Dr.',
+                },
+                {
+                    text: 'Asst. Prof. Dr.',
+                    value: 'Asst. Prof. Dr.',
+                },
+            ],
+            onFilter: (value, record) => record.title === value,
+            filterSearch: true,
+        },
+        {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
@@ -112,40 +146,6 @@ function Doctors() {
                     {dayjs(dateOfBirth).format('DD-MMM-YYYY')}
                 </Tooltip>
             ),
-        },
-        {
-            title: 'Title',
-            dataIndex: 'title',
-            key: 'title',
-            ellipsis: {
-                showTitle: false,
-            },
-            render: (title) => (
-                <Tooltip placement="topLeft" title={title}>
-                    {title}
-                </Tooltip>
-            ),
-            filteredValue: filteredInfo.title || null,
-            filters: [
-                {
-                    text: 'Dr.',
-                    value: 'Dr.',
-                },
-                {
-                    text: 'Prof. Dr.',
-                    value: 'Prof. Dr.',
-                },
-                {
-                    text: 'Assoc. Prof. Dr.',
-                    value: 'Assoc. Prof. Dr.',
-                },
-                {
-                    text: 'Asst. Prof. Dr.',
-                    value: 'Asst. Prof. Dr.',
-                },
-            ],
-            onFilter: (value, record) => record.title === value,
-            filterSearch: true,
         },
         {
             title: 'Present Address',

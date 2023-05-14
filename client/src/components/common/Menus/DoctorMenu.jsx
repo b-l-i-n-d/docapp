@@ -15,7 +15,7 @@ function DoctorMenu() {
     const path = pathname.split('/').slice(0, 2).join('/');
     const doctorMenuItems = [
         {
-            label: <NavLink to="/">Home</NavLink>,
+            label: <NavLink to="/">Dashboard</NavLink>,
             key: '/',
             icon: <AiOutlineHome size={16} />,
         },
@@ -25,8 +25,8 @@ function DoctorMenu() {
             icon: <FaStethoscope size={16} />,
         },
         {
-            label: <NavLink to="/book-appionments">Book Appionments</NavLink>,
-            key: '/book-appionments',
+            label: <NavLink to="/book-appointments">Book Appionments</NavLink>,
+            key: '/book-appointments',
             icon: <AiOutlineAppstoreAdd size={16} />,
         },
         {

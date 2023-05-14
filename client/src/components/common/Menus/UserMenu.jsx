@@ -25,8 +25,8 @@ function UserMenu() {
             icon: <FaStethoscope size={16} />,
         },
         {
-            label: <NavLink to="/book-appionments">Book Appionments</NavLink>,
-            key: '/book-appionments',
+            label: <NavLink to="/book-appointments">Book Appointments</NavLink>,
+            key: '/book-appointments',
             icon: <AiOutlineAppstoreAdd size={16} />,
         },
         {

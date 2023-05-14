@@ -10,7 +10,7 @@ function AdminMenu() {
     const adminMenuItems = [
         {
             label: <NavLink to="/">Dashboard</NavLink>,
-            key: '/',
+            key: '/dashboard',
             icon: <AiOutlineDashboard size={16} />,
         },
         {

@@ -108,15 +108,32 @@ const verifyToken = async (req, res) => {
 
 const getNotifications = async (req, res) => {
     const userId = res.locals.data._id;
+    const limit = parseInt(req.query.limit, 10);
 
     try {
-        const notificationData = await User.findById(userId)
-            .select('unSeenNotification seenNotification')
-            .lean();
+        let notificationData = null;
+        if (limit < 0) {
+            return res.status(400).json({ error: 'Invalid limit.' });
+        }
+        if (limit === 0) {
+            notificationData = [];
+        }
+        if (limit > 0) {
+            notificationData = await User.findById(userId)
+                .select('unSeenNotification seenNotification')
+                .slice('unSeenNotification', limit)
+                .slice('seenNotification', limit)
+                .lean();
+        }
+        if (!limit) {
+            notificationData = await User.findById(userId)
+                .select('unSeenNotification seenNotification')
+                .lean();
+        }
 
-        res.status(200).json(notificationData);
+        return res.status(200).json(notificationData);
     } catch (error) {
-        res.status(500).json({ error: 'Something went wrong.' });
+        return res.status(500).json({ error: 'Something went wrong.' });
     }
 };
 

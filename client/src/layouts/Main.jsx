@@ -7,6 +7,7 @@ import { Outlet } from 'react-router-dom';
 import Logo from '../assets/logos/withoutText/docapp_light.svg';
 import { Common } from '../components';
 import { themeConfig } from '../configs';
+import fetch from '../configs/fetch';
 import { useLazyLogoutUserQuery } from '../redux/api/authAPI';
 import { useGetNotificationQuery } from '../redux/api/userAPI';
 import { setTheme } from '../redux/features/themes/themeSlice';
@@ -23,7 +24,7 @@ function Main() {
     const [logOutUser, { isLoading: isLogOutLoading, error: logOutError }] =
         useLazyLogoutUserQuery();
 
-    const { error } = useGetNotificationQuery(undefined, {
+    const { error } = useGetNotificationQuery(fetch.NOTIFICATION_LIMIT, {
         skip: !user,
         pollingInterval: 10000,
     });
@@ -136,7 +137,11 @@ function Main() {
                             <Dropdown
                                 // eslint-disable-next-line react/no-unstable-nested-components
                                 dropdownRender={() => (
-                                    <Common.Notifications notificationData={notifications} />
+                                    <Common.Notifications
+                                        notificationData={notifications}
+                                        centered
+                                        showViewAll
+                                    />
                                 )}
                                 trigger={['click']}
                                 placement="bottomRight"

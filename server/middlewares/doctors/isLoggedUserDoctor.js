@@ -3,9 +3,9 @@ import { doctorsModel } from '../../components/doctors/index.js';
 
 const isLoggedUserDoctor = async (req, res, next) => {
     const userId = res.locals.data._id;
-    const { doctorId } = req.query;
+    const { doctorId, count } = req.query;
 
-    if (doctorId) {
+    if (doctorId && !count) {
         if (!mongoose.Types.ObjectId.isValid(doctorId)) {
             return res.status(400).json({
                 error: 'Invalid doctor id',

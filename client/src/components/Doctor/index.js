@@ -1,4 +1,5 @@
+import Dashboard from './Dashboard';
 import DoctorCard from './DoctorCard';
 import DoctorInfo from './DoctorInfo';
 
-export default { DoctorInfo, DoctorCard };
+export default { Dashboard, DoctorInfo, DoctorCard };

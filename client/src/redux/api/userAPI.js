@@ -1,14 +1,16 @@
+import { generateQueryUrl } from '../../helpers';
 import { setNotification } from '../features/users/userSlice';
 import { apiSlice } from './apiSlice';
 
 export const userAPI = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getNotification: builder.query({
-            query: () => ({
-                url: '/users/notifications',
+            query: (limit) => ({
+                url: generateQueryUrl(`/users/notifications`, { limit }),
                 method: 'GET',
                 credentials: 'include',
             }),
+            providesTags: ['Notifications'],
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
@@ -26,6 +28,7 @@ export const userAPI = apiSlice.injectEndpoints({
                 method: 'PATCH',
                 credentials: 'include',
             }),
+            invalidatesTags: ['Notifications'],
             async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
