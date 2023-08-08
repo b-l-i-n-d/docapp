@@ -193,9 +193,13 @@ const deleteNotification = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
+    const { limit, page } = req.query;
     try {
-        const users = await User.find({}).select('name email role isDoctor').lean();
-        return res.status(200).json(users);
+        const users = User.find({}).select('name email role isDoctor').lean();
+
+        const paginatedUsers = await helpers.paginateQuery(users, page, limit);
+
+        return res.status(200).json(paginatedUsers);
     } catch (error) {
         return res.status(500).json({ error: 'Something went wrong.' });
     }

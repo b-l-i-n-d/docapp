@@ -21,17 +21,23 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
+import { fetchConfig } from '../../configs';
 import { useGetDepartmentsQuery } from '../../redux/api/departmentAPI';
 import { useGetAllDoctorsQuery, useUpdateStatusMutation } from '../../redux/api/doctorAPI';
 
 function Doctors() {
-    const { data: doctors, isLoading: isGetAllDoctorsLoading } = useGetAllDoctorsQuery();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredInfo, setFilteredInfo] = useState({});
+    const [currentPage, setCurrentPage] = useState(1);
+    const { data: doctorsData, isLoading: isGetAllDoctorsLoading } = useGetAllDoctorsQuery({
+        page: currentPage,
+        limit: fetchConfig.LIMIT,
+    });
     const [updateDoctorStatus, { isLoading: isUpdateStatusLoading, data: updatedDoctor }] =
         useUpdateStatusMutation();
     const { data: departments } = useGetDepartmentsQuery();
 
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filteredInfo, setFilteredInfo] = useState({});
+    const { data: doctors, total } = doctorsData || [];
 
     const actionDropdownOnclick = (doctorId, doctorStatus) => {
         updateDoctorStatus({
@@ -479,6 +485,13 @@ function Doctors() {
                     y: 300,
                 }}
                 onChange={handleChange}
+                pagination={{
+                    current: currentPage,
+                    pageSize: fetchConfig.LIMIT,
+                    total: total || 0,
+                    showTotal: (t) => `Total ${t} items`,
+                    onChange: (page) => setCurrentPage(page),
+                }}
             />
         </Card>
     );

@@ -39,7 +39,7 @@ router.delete(
 );
 
 router.get(
-    '/allUsers',
+    '/',
     [auth.verifyRefreshToken, auth.verifyAccessToken, auth.isAdmin],
     usersController.getAllUsers
 );

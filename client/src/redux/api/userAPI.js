@@ -58,8 +58,8 @@ export const userAPI = apiSlice.injectEndpoints({
             },
         }),
         getAllUsers: builder.query({
-            query: () => ({
-                url: '/users/allUsers',
+            query: ({ page, limit }) => ({
+                url: generateQueryUrl(`/users`, { page, limit }),
                 method: 'GET',
                 credentials: 'include',
             }),

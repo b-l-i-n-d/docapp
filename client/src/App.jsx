@@ -29,7 +29,7 @@ function App() {
 
                 token: {
                     wireframe: false,
-                    colorPrimary: currentTheme === themeConfig.DARK ? '#722ED1' : '#FA8C16',
+                    colorPrimary: currentTheme === themeConfig.DARK ? '#722ED1' : '#722ED1',
                 },
             }}
         >

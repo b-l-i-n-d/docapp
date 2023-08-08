@@ -275,14 +275,17 @@ const getDoctor = async (req, res) => {
 };
 
 const getAllDoctors = async (req, res) => {
+    const { limit, page } = req.query;
     try {
-        const result = await Doctor.find({})
+        const doctors = Doctor.find({})
             .populate('department', 'name')
             .populate('presentAddress', 'name')
             .populate('workplace', 'orgName')
             .lean();
 
-        return res.status(200).json(result);
+        const paginatedDoctors = await helpers.paginateQuery(doctors, page, limit);
+
+        return res.status(200).json(paginatedDoctors);
     } catch (error) {
         return res.status(500).json({
             error: error.message,

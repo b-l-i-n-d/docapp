@@ -9,12 +9,18 @@ import {
 } from '@ant-design/icons';
 import { Button, Card, Dropdown, Input, Space, Table, Tag, Typography } from 'antd';
 import React, { useState } from 'react';
+import { fetchConfig } from '../../configs';
 import { useGetAllUsersQuery } from '../../redux/api/userAPI';
 
 function Users() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredInfo, setFilteredInfo] = useState({});
-    const { data: users, isLoading } = useGetAllUsersQuery();
+    const [currentPage, setCurrentPage] = useState(1);
+    const { data: usersData, isLoading } = useGetAllUsersQuery({
+        page: currentPage,
+        limit: fetchConfig.LIMIT,
+    });
+    const { data: users, total } = usersData || [];
     const menuItems = [
         {
             key: '1',
@@ -187,6 +193,13 @@ function Users() {
                 dataSource={dataSource}
                 scroll={{ x: 800 }}
                 onChange={handleChange}
+                pagination={{
+                    current: currentPage,
+                    pageSize: fetchConfig.LIMIT,
+                    total: total || 0,
+                    showTotal: (t) => `Total ${t} users`,
+                    onChange: (page) => setCurrentPage(page),
+                }}
             />
         </Card>
     );

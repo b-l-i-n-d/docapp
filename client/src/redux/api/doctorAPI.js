@@ -1,4 +1,4 @@
-import { cookieExtractor } from '../../helpers/index';
+import { cookieExtractor, generateQueryUrl } from '../../helpers/index';
 import { setUser } from '../features/users/userSlice';
 import { apiSlice } from './apiSlice';
 import { userAPI } from './userAPI';
@@ -105,11 +105,12 @@ export const doctorAPI = apiSlice.injectEndpoints({
         }),
 
         getAllDoctors: builder.query({
-            query: () => ({
-                url: '/doctors',
+            query: ({ page, limit }) => ({
+                url: generateQueryUrl('/doctors', { page, limit }),
                 method: 'GET',
                 credentials: 'include',
             }),
+            providesTags: ['Doctors'],
 
             async onQueryStarted(args, { queryFulfilled }) {
                 try {
@@ -120,7 +121,6 @@ export const doctorAPI = apiSlice.injectEndpoints({
                     return error;
                 }
             },
-            providesTags: ['Doctors'],
         }),
 
         getApprovedDoctors: builder.query({
