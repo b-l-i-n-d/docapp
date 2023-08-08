@@ -1,5 +1,5 @@
 import { AppstoreAddOutlined, UnorderedListOutlined, UserAddOutlined } from '@ant-design/icons';
-import { Card, Row, Space, Typography } from 'antd';
+import { Card, Col, Row, Typography } from 'antd';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -16,8 +16,8 @@ function Home() {
                 backgroundColor: 'transparent',
             }}
         >
-            <Row justify="center" gutter={[16, 16]}>
-                <Space size="large">
+            <Row gutter={[16, 16]} justify="center">
+                <Col xs={24} md={12} lg={6}>
                     <Link to="/apply">
                         <Card
                             className="group hover:shadow-xl hover:shadow-primary/30 transition-all duration-150 ease-linear"
@@ -28,9 +28,9 @@ function Home() {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 gap: 16,
+                                textAlign: 'center',
                             }}
                             style={{
-                                width: 300,
                                 height: 300,
                             }}
                         >
@@ -42,6 +42,8 @@ function Home() {
                             <Typography.Title level={4}>Apply for doctor account</Typography.Title>
                         </Card>
                     </Link>
+                </Col>
+                <Col xs={24} md={12} lg={6}>
                     <Link to="/book-appointments">
                         <Card
                             className="group hover:shadow-xl hover:shadow-primary/30 transition-all duration-150 ease-linear"
@@ -52,9 +54,9 @@ function Home() {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 gap: 16,
+                                textAlign: 'center',
                             }}
                             style={{
-                                width: 300,
                                 height: 300,
                             }}
                         >
@@ -66,6 +68,8 @@ function Home() {
                             <Typography.Title level={4}>Book Appointments</Typography.Title>
                         </Card>
                     </Link>
+                </Col>
+                <Col xs={24} md={12} lg={6}>
                     <Link to="/appointments">
                         <Card
                             className="group hover:shadow-xl hover:shadow-primary/30 transition-all duration-150 ease-linear"
@@ -77,9 +81,9 @@ function Home() {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 gap: 16,
+                                textAlign: 'center',
                             }}
                             style={{
-                                width: 300,
                                 height: 300,
                             }}
                         >
@@ -91,7 +95,7 @@ function Home() {
                             <Typography.Title level={4}>Appointments</Typography.Title>
                         </Card>
                     </Link>
-                </Space>
+                </Col>
             </Row>
         </Card>
     );
