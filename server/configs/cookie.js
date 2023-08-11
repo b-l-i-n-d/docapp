@@ -1,7 +1,7 @@
 import urls from './urls.js';
 
 const { hostname } = new URL(urls.CLIENT_URL);
-const domain = hostname.split('.').slice(-2).join('.');
+const domain = `.${hostname.split('.').slice(-2).join('.')}`;
 
 const access = {
     name: process.env.COOKIE_ACCESS_NAME,
