@@ -5,6 +5,7 @@
 
 -   [Introduction](#introduction)
 -   [Features](#features)
+-   [Technologies](#technologies)
 -   [Installation](#installation)
 -   [Environment Variables](#environment-variables)
     -   [Client](#client)
@@ -48,6 +49,32 @@ This is a doctor appointment app that allows users to book an appointment with a
     -   Admin can view all doctors.
     -   Admin can accept/recect doctors account request.
     -   Admin can view and add/edit all departments.
+
+## Technologies
+
+### Client
+
+-   [React](https://reactjs.org/)
+-   [React Router](https://reactrouter.com/)
+-   [Redux Toolkit](https://redux-toolkit.js.org/)
+-   [RTK Query](https://redux-toolkit.js.org/rtk-query/overview)
+-   [React PDF Renderer](https://react-pdf.org/)
+-   [Ant Design](https://ant.design/)
+-   [Chart.js](https://www.chartjs.org/)
+-   [Tailwind CSS](https://tailwindcss.com/)
+
+### Server
+
+-   [Nodejs](https://nodejs.org/en/)
+-   [Express](https://expressjs.com/)
+-   [MongoDB](https://www.mongodb.com/)
+-   [Mongoose](https://mongoosejs.com/)
+-   [Cloudinary](https://cloudinary.com/)
+-   [NodeMailer](https://nodemailer.com/about/)
+-   [JWT](https://jwt.io/)
+-   [Bcrypt](https://www.npmjs.com/package/bcrypt)
+-   [express-validator](https://express-validator.github.io/docs/)
+-   [handlebars](https://handlebarsjs.com/)
 
 ## Installation
 
